@@ -19,6 +19,16 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Clean target directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            mkdir -p /var/www/fencing
+            rm -rf /var/www/fencing/*
+
       - name: Copy to server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -28,4 +38,3 @@ jobs:
           source: "dist/*"
           target: "/var/www/fencing"
           strip_components: 1
-          rm: true
