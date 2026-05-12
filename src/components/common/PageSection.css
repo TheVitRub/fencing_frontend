@@ -1,0 +1,12 @@
+.page-section {
+  padding: 4rem 0;
+}
+.page-section.centered { text-align: center; }
+
+.section-subtitle {
+  text-align: center;
+  color: var(--color-muted);
+  font-style: italic;
+  font-size: 1rem;
+  margin-top: 0.4rem;
+}

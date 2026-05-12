@@ -1,0 +1,215 @@
+:root {
+  --color-bg:        #0e0b07;
+  --color-surface:   #1a1309;
+  --color-border:    #5a3e1b;
+  --color-gold:      #c9a84c;
+  --color-gold-dim:  #8a6b2a;
+  --color-cream:     #e8dcc4;
+  --color-text:      #cfc0a0;
+  --color-muted:     #7a6a50;
+  --color-crimson:   #8b1a1a;
+  --color-crimson-hover: #a82020;
+
+  --font-title: 'Cinzel', serif;
+  --font-body:  'IM Fell English', serif;
+
+  --radius: 4px;
+  --transition: 0.25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+/* ── Texture overlay ───────────────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  z-index: 9999;
+}
+
+a { color: var(--color-gold); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--color-cream); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-title);
+  color: var(--color-gold);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+img { max-width: 100%; display: block; }
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.page-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Divider ────────────────────────────────────────────────────────────── */
+.ornament-divider {
+  text-align: center;
+  color: var(--color-gold-dim);
+  font-size: 1.4rem;
+  letter-spacing: 0.5rem;
+  margin: 2.5rem 0;
+  user-select: none;
+}
+.ornament-divider::before,
+.ornament-divider::after {
+  content: '';
+  display: inline-block;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-dim));
+  vertical-align: middle;
+  margin: 0 1rem;
+}
+.ornament-divider::after {
+  background: linear-gradient(90deg, var(--color-gold-dim), transparent);
+}
+
+/* ── Section title ──────────────────────────────────────────────────────── */
+.section-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Card grid ──────────────────────────────────────────────────────────── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  position: relative;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.card:hover {
+  border-color: var(--color-gold-dim);
+  transform: translateY(-3px);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+.card-title {
+  font-family: var(--font-title);
+  color: var(--color-gold);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+.card-meta {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+.card-text { color: var(--color-text); }
+
+/* ── Button ─────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-block;
+  padding: 0.55rem 1.4rem;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  border: none;
+}
+.btn-primary {
+  background: var(--color-crimson);
+  color: var(--color-cream);
+}
+.btn-primary:hover { background: var(--color-crimson-hover); color: #fff; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold-dim);
+}
+.btn-outline:hover {
+  background: var(--color-gold-dim);
+  color: var(--color-bg);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--color-crimson);
+  border: 1px solid var(--color-crimson);
+}
+.btn-danger:hover { background: var(--color-crimson); color: #fff; }
+
+/* ── Form ───────────────────────────────────────────────────────────────── */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+.form-field label {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+.form-field input,
+.form-field textarea,
+.form-field select {
+  background: #120f09;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-cream);
+  padding: 0.55rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  width: 100%;
+  transition: border-color var(--transition);
+}
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--color-gold-dim);
+}
+.form-field textarea { resize: vertical; min-height: 100px; }
+
+/* ── Error / Loading ────────────────────────────────────────────────────── */
+.loading-text {
+  text-align: center;
+  color: var(--color-muted);
+  padding: 3rem;
+  font-style: italic;
+}
+.error-text {
+  text-align: center;
+  color: var(--color-crimson);
+  padding: 3rem;
+}
