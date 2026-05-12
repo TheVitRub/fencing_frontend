@@ -12,15 +12,17 @@ export default function Home() {
       <section className="hero">
         <div className="hero-bg-overlay" />
         <div className="hero-content page-wrapper">
-          <div className="hero-emblem">⚔</div>
-          <h1 className="hero-title">
-            {content?.hero?.title || 'Школа фехтования'}
-          </h1>
-          <p className="hero-subtitle">
-            {content?.hero?.subtitle || 'XVI–XVII век · Исторический бой на клинках'}
-          </p>
-          <div className="hero-rule" />
-          <p className="hero-tagline">
+          <div className="hero-frame">
+            <span className="hero-emblem">⚔</span>
+            <h1 className="hero-title">
+              {content?.hero?.title || 'Ferrum et Gloria'}
+            </h1>
+            <div className="hero-rule" />
+            <p className="hero-subtitle">
+              {content?.hero?.subtitle || 'XVI–XVII век · Исторический бой на клинках'}
+            </p>
+          </div>
+          <p className="hero-tagline" style={{ marginTop: '2rem' }}>
             Железо и слава — не просто слова. Это путь.
           </p>
         </div>

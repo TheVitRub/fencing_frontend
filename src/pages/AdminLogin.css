@@ -1,4 +1,16 @@
+/* Страница входа остаётся тёмной — «вход в цитадель» */
 .login-page {
+  --color-bg:        #0e0b07;
+  --color-surface:   #1a1309;
+  --color-border:    #5a3e1b;
+  --color-gold:      #c9a84c;
+  --color-gold-dim:  #8a6b2a;
+  --color-cream:     #e8dcc4;
+  --color-text:      #cfc0a0;
+  --color-muted:     #7a6a50;
+  --color-crimson:   #8b1a1a;
+  --color-crimson-hover: #a82020;
+
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -6,6 +18,17 @@
   background:
     radial-gradient(ellipse 70% 50% at 50% 50%, rgba(139,26,26,0.06) 0%, transparent 70%),
     var(--color-bg);
+  color: var(--color-text);
+}
+
+.login-page .form-field input {
+  background: #120f09;
+  color: var(--color-cream);
+  border-color: var(--color-border);
+}
+.login-page .form-field input:focus {
+  border-color: var(--color-gold-dim);
+  box-shadow: none;
 }
 
 .login-box {
@@ -27,21 +50,14 @@
 }
 
 .login-emblem { font-size: 2.5rem; margin-bottom: 0.75rem; }
-
-.login-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.25rem;
-}
-
+.login-title  { font-size: 1.5rem; margin-bottom: 0.25rem; }
 .login-sub {
   font-style: italic;
   color: var(--color-muted);
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
 }
-
 .login-form { text-align: left; }
-
 .login-error {
   color: var(--color-crimson);
   font-size: 0.9rem;

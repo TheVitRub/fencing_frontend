@@ -1,18 +1,58 @@
+/* ── Тёмная тема для панели администратора ────────────────────────────────
+   Переопределяем переменные :root обратно в тёмные значения,
+   чтобы публичный светлый стиль не «просачивался» в служебную зону.
+────────────────────────────────────────────────────────────────────────── */
 .admin-page {
+  --color-bg:        #0e0b07;
+  --color-surface:   #1a1309;
+  --color-border:    #5a3e1b;
+  --color-gold:      #c9a84c;
+  --color-gold-dim:  #8a6b2a;
+  --color-cream:     #e8dcc4;
+  --color-text:      #cfc0a0;
+  --color-muted:     #7a6a50;
+  --color-crimson:   #8b1a1a;
+  --color-crimson-hover: #a82020;
+  --shadow-card:     none;
+  --shadow-card-hover: none;
+
+  background: var(--color-bg);
+  color: var(--color-text);
   min-height: 100vh;
   padding: 2rem 0 4rem;
 }
 
+/* Переопределяем поля форм для тёмного фона */
+.admin-page .form-field input,
+.admin-page .form-field textarea,
+.admin-page .form-field select {
+  background: #120f09;
+  color: var(--color-cream);
+  border-color: var(--color-border);
+}
+.admin-page .form-field input:focus,
+.admin-page .form-field textarea:focus {
+  border-color: var(--color-gold-dim);
+  box-shadow: none;
+}
+.admin-page .card,
+.admin-page .admin-crud {
+  background: var(--color-surface);
+  box-shadow: none;
+}
+.admin-page .btn-outline:hover {
+  background: var(--color-gold-dim);
+  color: var(--color-bg);
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 }
-
-.admin-title {
-  font-size: 1.5rem;
-}
+.admin-title { font-size: 1.5rem; }
 
 .admin-tabs {
   display: flex;
@@ -22,7 +62,6 @@
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 1rem;
 }
-
 .admin-tab {
   font-family: var(--font-title);
   font-size: 0.8rem;
@@ -42,5 +81,4 @@
   color: #fff;
   border-color: var(--color-crimson);
 }
-
 .admin-content { max-width: 800px; }

@@ -14,17 +14,16 @@
 }
 
 .footer-ornament {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--color-gold-dim);
   letter-spacing: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .footer-school {
-  font-family: var(--font-title);
-  font-size: 0.9rem;
+  font-family: var(--font-script);
+  font-size: 1.05rem;
   color: var(--color-gold);
-  letter-spacing: 0.08em;
 }
 
 .footer-contacts {
@@ -51,4 +50,5 @@
   font-size: 0.75rem;
   color: var(--color-border);
   margin-top: 0.5rem;
+  font-style: italic;
 }

@@ -8,14 +8,15 @@
 
 .honor-card {
   text-align: center;
-  background: var(--color-surface);
+  background: #fff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 1.5rem 1rem 1.25rem;
-  transition: border-color var(--transition), transform var(--transition);
+  padding: 1.75rem 1.25rem 1.25rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition), transform var(--transition);
 }
 .honor-card:hover {
-  border-color: var(--color-gold-dim);
+  box-shadow: var(--shadow-card-hover);
   transform: translateY(-4px);
 }
 .honor-card--expanded {
@@ -27,7 +28,7 @@
   height: 100px;
   margin: 0 auto 1rem;
   border-radius: 50%;
-  border: 2px solid var(--color-gold-dim);
+  border: 2px solid var(--color-border);
   overflow: hidden;
 }
 .honor-photo { width: 100%; height: 100%; object-fit: cover; }
@@ -38,14 +39,15 @@
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  background: rgba(201,168,76,0.06);
+  background: var(--color-surface);
   color: var(--color-gold-dim);
 }
 
 .honor-name {
+  font-family: var(--font-title);
   font-size: 1rem;
   color: var(--color-gold);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 .honor-title {
   font-style: italic;
@@ -54,11 +56,12 @@
   margin-bottom: 0.6rem;
 }
 .honor-desc {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--color-muted);
-  line-height: 1.55;
+  line-height: 1.6;
   word-break: break-word;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .honor-toggle {
@@ -69,8 +72,7 @@
   cursor: pointer;
   padding: 0.2rem 0;
   letter-spacing: 0.04em;
+  font-family: var(--font-title);
   transition: color var(--transition);
 }
-.honor-toggle:hover {
-  color: var(--color-gold);
-}
+.honor-toggle:hover { color: var(--color-gold); }
