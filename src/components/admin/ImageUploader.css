@@ -1,0 +1,125 @@
+.img-uploader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Сетка превью ───────────────────────────────────────────────────────── */
+.img-uploader-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.5rem;
+}
+
+.img-uploader-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: grab;
+  background: rgba(0,0,0,0.2);
+}
+.img-uploader-thumb:active { cursor: grabbing; }
+.img-uploader-thumb.is-cover { border-color: var(--color-gold); box-shadow: 0 0 0 1px var(--color-gold-dim) inset; }
+
+.img-uploader-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.img-uploader-cover-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(201,168,76,0.92);
+  color: #1a1309;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--font-title);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Кнопки в правом верхнем углу — появляются при hover */
+.img-uploader-thumb-actions {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.img-uploader-thumb:hover .img-uploader-thumb-actions { opacity: 1; }
+
+.img-uploader-mini-btn {
+  width: 22px;
+  height: 22px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.img-uploader-mini-btn:hover { background: rgba(0,0,0,0.85); }
+.img-uploader-mini-btn.danger:hover { background: var(--color-crimson); }
+
+/* ── Зона перетаскивания ────────────────────────────────────────────────── */
+.img-uploader-drop {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-muted);
+}
+.img-uploader-drop:hover,
+.img-uploader-drop.is-dragging {
+  border-color: var(--color-gold-dim);
+  background: rgba(201,168,76,0.06);
+  color: var(--color-cream);
+}
+.img-uploader-drop.is-loading {
+  cursor: progress;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.img-uploader-drop strong {
+  color: var(--color-cream);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.img-uploader-drop span { font-size: 0.85rem; }
+.img-uploader-drop small {
+  font-size: 0.72rem;
+  color: var(--color-muted);
+  opacity: 0.7;
+  margin-top: 0.25rem;
+}
+
+.img-uploader-error {
+  font-size: 0.8rem;
+  color: var(--color-crimson);
+}
+.img-uploader-hint {
+  font-size: 0.72rem;
+  color: var(--color-muted);
+  font-style: italic;
+}

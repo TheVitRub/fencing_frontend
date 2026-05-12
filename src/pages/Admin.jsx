@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useFetch } from '../hooks/useFetch'
 import AdminCRUD from '../components/admin/AdminCRUD'
+import ImageUploader from '../components/admin/ImageUploader'
 import * as api from '../api'
 import './Admin.css'
 
@@ -101,11 +102,11 @@ export default function Admin() {
               onSave={saveEvent}
               onDelete={delEvent}
               fields={[
-                { key: 'title',       label: 'Название',       required: true },
-                { key: 'description', label: 'Описание',        type: 'textarea' },
-                { key: 'date',        label: 'Дата',            type: 'datetime-ru', required: true, placeholder: '01.04.2026 10:00' },
-                { key: 'location',    label: 'Место' },
-                { key: 'image_url',   label: 'URL изображения', type: 'url' },
+                { key: 'title',       label: 'Название',  required: true },
+                { key: 'date',        label: 'Дата',       type: 'datetime-ru', required: true, placeholder: '01.04.2026 10:00' },
+                { key: 'location',    label: 'Место',      placeholder: 'г. Москва, ул. ...' },
+                { key: 'description', label: 'Описание',   type: 'textarea', placeholder: 'Что будет на мероприятии…' },
+                { key: 'images',      label: 'Фотографии', type: 'image-gallery', max: 15 },
               ]}
             />
           )}
@@ -135,9 +136,10 @@ export default function Admin() {
               onDelete={delHonor}
               fields={[
                 { key: 'name',        label: 'Имя',               required: true },
-                { key: 'title',       label: 'Звание/Титул' },
-                { key: 'description', label: 'Описание',           type: 'textarea' },
-                { key: 'photo_url',   label: 'URL фото',           type: 'url' },
+                { key: 'title',       label: 'Звание / Титул',     placeholder: 'Мастер клинка' },
+                { key: 'description', label: 'Описание',           type: 'textarea', placeholder: 'Заслуги, история, личное…' },
+                { key: 'photo_url',   label: 'Главное фото',       type: 'image' },
+                { key: 'images',      label: 'Дополнительные фотографии', type: 'image-gallery', max: 8 },
                 { key: 'sort_order',  label: 'Порядок сортировки', type: 'number', min: 0, placeholder: '0' },
               ]}
             />
@@ -151,10 +153,10 @@ export default function Admin() {
               onSave={saveAch}
               onDelete={delAch}
               fields={[
-                { key: 'title',       label: 'Название',       required: true },
-                { key: 'year',        label: 'Год',             type: 'number', required: true, min: 1900, max: 2100, placeholder: '2024' },
-                { key: 'description', label: 'Описание',        type: 'textarea' },
-                { key: 'image_url',   label: 'URL изображения', type: 'url' },
+                { key: 'title',       label: 'Название',  required: true },
+                { key: 'year',        label: 'Год',       type: 'number', required: true, min: 1900, max: 2100, placeholder: '2024' },
+                { key: 'description', label: 'Описание',  type: 'textarea', placeholder: 'Какая победа, кто отличился, чем гордимся…' },
+                { key: 'images',      label: 'Фотографии',type: 'image-gallery', max: 10 },
               ]}
             />
           )}
@@ -206,14 +208,51 @@ export default function Admin() {
 
 function FounderForm({ initial, onSave }) {
   const [form, setForm] = useState(initial)
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState(null)
   const ch = (k, v) => setForm(f => ({ ...f, [k]: v }))
-  const submit = e => { e.preventDefault(); onSave(form) }
+  const submit = async e => {
+    e.preventDefault()
+    setSaving(true)
+    try {
+      await onSave(form)
+      setMsg({ ok: true, text: 'Сохранено' })
+    } catch (err) {
+      setMsg({ ok: false, text: err?.response?.data?.error || 'Ошибка сохранения' })
+    } finally {
+      setSaving(false)
+      setTimeout(() => setMsg(null), 3000)
+    }
+  }
   return (
     <form onSubmit={submit}>
-      <div className="form-field"><label>Имя</label><input value={form.name} onChange={e => ch('name', e.target.value)} /></div>
-      <div className="form-field"><label>Биография</label><textarea value={form.bio} onChange={e => ch('bio', e.target.value)} style={{ minHeight: '140px' }} /></div>
-      <div className="form-field"><label>URL фото</label><input value={form.photo_url} onChange={e => ch('photo_url', e.target.value)} /></div>
-      <button type="submit" className="btn btn-primary">Сохранить</button>
+      <div className="form-field">
+        <label>Имя</label>
+        <input value={form.name || ''} onChange={e => ch('name', e.target.value)} />
+      </div>
+      <div className="form-field">
+        <label>Биография</label>
+        <textarea value={form.bio || ''} onChange={e => ch('bio', e.target.value)} style={{ minHeight: '160px' }} />
+      </div>
+      <div className="form-field">
+        <label>Фотография</label>
+        <ImageUploader
+          value={form.photo_url ? [form.photo_url] : []}
+          onChange={urls => ch('photo_url', urls[0] || '')}
+          multiple={false}
+          max={1}
+        />
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+        <button type="submit" className="btn btn-primary" disabled={saving}>
+          {saving ? 'Сохранение…' : 'Сохранить'}
+        </button>
+        {msg && (
+          <span style={{ color: msg.ok ? '#a8e6a8' : 'var(--color-crimson)', fontSize: '0.9rem' }}>
+            {msg.text}
+          </span>
+        )}
+      </div>
     </form>
   )
 }

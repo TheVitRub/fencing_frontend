@@ -76,3 +76,38 @@
   transition: color var(--transition);
 }
 .honor-toggle:hover { color: var(--color-gold); }
+
+/* Когда карточка раскрыта — она занимает всю строку для галереи */
+.honor-card.is-expanded {
+  grid-column: 1 / -1;
+  text-align: left;
+  padding: 1.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.honor-card.is-expanded .honor-photo-wrap {
+  margin: 0;
+  border-radius: 6px;
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+}
+.honor-gallery {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .honor-card.is-expanded {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .honor-card.is-expanded .honor-photo-wrap {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+  }
+}

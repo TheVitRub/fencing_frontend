@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import ImageUploader from './ImageUploader'
 import './AdminCRUD.css'
 
 // ── Дата-хелперы ───────────────────────────────────────────────────────────
@@ -40,9 +41,15 @@ function Toast({ message, type, onClose }) {
 // ── Основной компонент ─────────────────────────────────────────────────────
 
 /**
- * fields: { key, label, type?, required?, min?, max?, placeholder? }
- * type: 'text' | 'textarea' | 'number' | 'datetime-ru' | 'url'
- * datetime-ru: вводится в формате ДД.ММ.ГГГГ ЧЧ:ММ, отправляется как ISO
+ * fields: { key, label, type?, required?, min?, max?, placeholder?, max? }
+ * type:
+ *   'text'           — обычный input
+ *   'textarea'       — многострочный
+ *   'number'         — int с валидацией
+ *   'datetime-ru'    — ДД.ММ.ГГГГ ЧЧ:ММ, отправляется как ISO
+ *   'url'            — input type="url"
+ *   'image'          — загрузка одного изображения
+ *   'image-gallery'  — загрузка массива изображений
  */
 export default function AdminCRUD({ title, fields, items, onSave, onDelete, loading }) {
   const [form, setForm]   = useState(null)
@@ -54,16 +61,21 @@ export default function AdminCRUD({ title, fields, items, onSave, onDelete, load
   const hideToast = () => setToast(null)
 
   const emptyForm = () => Object.fromEntries(
-    fields.map(f => [f.key, f.type === 'number' ? '' : ''])
+    fields.map(f => {
+      if (f.type === 'image-gallery') return [f.key, []]
+      return [f.key, '']
+    })
   )
 
   const openNew  = () => { setErrors({}); setForm(emptyForm()) }
   const openEdit = item => {
     setErrors({})
     const copy = { ...item }
-    // datetime-ru: конвертируем ISO → российский формат для отображения в input
     fields.forEach(f => {
       if (f.type === 'datetime-ru') copy[f.key] = isoToRu(copy[f.key])
+      if (f.type === 'image-gallery' && !Array.isArray(copy[f.key])) {
+        copy[f.key] = []
+      }
     })
     setForm(copy)
   }
@@ -227,6 +239,20 @@ export default function AdminCRUD({ title, fields, items, onSave, onDelete, load
                       onChange={e => change(f.key, e.target.value, f.type)}
                       placeholder="ДД.ММ.ГГГГ ЧЧ:ММ"
                       maxLength={16}
+                    />
+                  ) : f.type === 'image-gallery' ? (
+                    <ImageUploader
+                      value={Array.isArray(form[f.key]) ? form[f.key] : []}
+                      onChange={urls => change(f.key, urls, f.type)}
+                      multiple
+                      max={f.max || 12}
+                    />
+                  ) : f.type === 'image' ? (
+                    <ImageUploader
+                      value={form[f.key] ? [form[f.key]] : []}
+                      onChange={urls => change(f.key, urls[0] || '', f.type)}
+                      multiple={false}
+                      max={1}
                     />
                   ) : (
                     <input

@@ -28,3 +28,12 @@ export const deleteAchievement = id => api.delete(`/admin/achievements/${id}`).t
 
 export const getFounder = () => api.get('/founder').then(r => r.data)
 export const upsertFounder = data => api.put('/admin/founder', data).then(r => r.data)
+
+// uploadFile — multipart-загрузка одного файла; возвращает { url, name, size }
+export const uploadFile = file => {
+  const fd = new FormData()
+  fd.append('file', file)
+  return api.post('/admin/upload', fd, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }).then(r => r.data)
+}
