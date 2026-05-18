@@ -90,7 +90,9 @@ export default function Students() {
                     {firstImage(article) ? (
                       <img src={firstImage(article)} alt={article.title} />
                     ) : (
-                      <span className="student-article-mark">{(article.category || article.title || '?').slice(0, 1)}</span>
+                      <span className="student-article-mark" aria-hidden="true">
+                        <span>⚔</span>
+                      </span>
                     )}
                     <small>{article.visibility === 'student' ? 'Для учеников' : article.visibility === 'registered' ? 'После регистрации' : 'Открыто'}</small>
                     <strong>{article.title}</strong>

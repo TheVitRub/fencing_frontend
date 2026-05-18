@@ -8,5 +8,16 @@
   color: var(--color-muted);
   font-style: italic;
   font-size: 1rem;
-  margin-top: 0.4rem;
+  margin: 0.4rem auto 0;
+  max-width: 720px;
+}
+
+@media (max-width: 760px) {
+  .page-section {
+    padding: 3.25rem 0;
+  }
+
+  .section-subtitle {
+    max-width: 30ch;
+  }
 }

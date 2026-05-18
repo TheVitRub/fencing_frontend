@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext'
 import { attendEvent, createComment, getPage, listComments, listEventAttendees, listEvents } from '../api'
 import ImageGallery from '../components/common/ImageGallery'
 import PageSection from '../components/common/PageSection'
+import { readAttendingEvents, rememberAttendance } from '../utils/attendanceStorage'
+import { formatSchoolCommentTime, formatSchoolDate, formatSchoolTime, getSchoolDateParts } from '../utils/schoolTime'
 import './Events.css'
 
 const FALLBACK_GLYPHS = ['⚔', '♜', '✦', '◇', '†']
@@ -18,46 +20,27 @@ function parsePageContent(page) {
 }
 
 function formatDateParts(iso) {
-  const d = new Date(iso)
-  if (isNaN(d)) return { day: '—', month: '', year: '', full: '', time: '' }
+  const parts = getSchoolDateParts(iso)
+  if (!parts) return { day: '—', month: '', year: '', full: '', time: '' }
   return {
-    day: d.getDate(),
-    month: d.toLocaleString('ru-RU', { month: 'short' }).replace('.', ''),
-    year: d.getFullYear(),
-    full: d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }),
-    time: d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+    day: parts.day,
+    month: formatSchoolDate(iso, { month: 'short' }).replace('.', ''),
+    year: parts.year,
+    full: formatSchoolDate(iso, { day: 'numeric', month: 'long', year: 'numeric' }),
+    time: formatSchoolTime(iso),
   }
 }
 
 function formatClock(date) {
-  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  return formatSchoolTime(date)
 }
 
 function formatCommentTime(iso) {
-  const d = new Date(iso)
-  if (isNaN(d)) return ''
-  return d.toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).replace('.', '')
+  return formatSchoolCommentTime(iso)
 }
 
 function isUpcoming(iso) {
   return new Date(iso) > new Date()
-}
-
-function readAttendingMap() {
-  try {
-    return JSON.parse(localStorage.getItem('fc_attending_events') || '{}')
-  } catch {
-    return {}
-  }
-}
-
-function rememberAttendance(eventId) {
-  try {
-    const current = readAttendingMap()
-    localStorage.setItem('fc_attending_events', JSON.stringify({ ...current, [eventId]: true }))
-  } catch {
-    // Private browsing can block storage; backend write is still the source of truth.
-  }
 }
 
 function EventComments({ eventId }) {
@@ -130,7 +113,7 @@ function EventComments({ eventId }) {
 function EventRow({ event, idx }) {
   const { isAuthenticated, user } = useAuth()
   const [expanded, setExpanded] = useState(false)
-  const [attending, setAttending] = useState(() => !!readAttendingMap()[event.id])
+  const [attending, setAttending] = useState(() => !!readAttendingEvents(user)[event.id])
   const [attendeeCount, setAttendeeCount] = useState(null)
   const [attendanceBusy, setAttendanceBusy] = useState(false)
   const [attendanceError, setAttendanceError] = useState('')
@@ -141,6 +124,10 @@ function EventRow({ event, idx }) {
   const longDesc = event.description && event.description.length > 240
 
   useEffect(() => {
+    setAttending(!!readAttendingEvents(user)[event.id])
+  }, [event.id, user?.id])
+
+  useEffect(() => {
     let cancelled = false
     if (!upcoming) return undefined
     listEventAttendees(event.id)
@@ -149,7 +136,7 @@ function EventRow({ event, idx }) {
         setAttendeeCount(items.length)
         if (user?.id && items.some(item => item.user_id === user.id)) {
           setAttending(true)
-          rememberAttendance(event.id)
+          rememberAttendance(user, event.id)
         }
       })
       .catch(() => {
@@ -167,7 +154,7 @@ function EventRow({ event, idx }) {
     try {
       await attendEvent(event.id, 'going')
       setAttending(true)
-      rememberAttendance(event.id)
+      rememberAttendance(user, event.id)
       setAttendeeCount(count => typeof count === 'number' ? count + 1 : count)
     } catch (err) {
       setAttendanceError(err?.response?.data?.error || 'Не удалось записаться. Попробуйте еще раз.')
@@ -178,7 +165,7 @@ function EventRow({ event, idx }) {
 
   return (
     <article className={`event-row${expanded ? ' is-expanded' : ''}`}>
-      <div className="event-row-media">
+      <div className={`event-row-media${images.length > 0 ? ' has-image' : ' has-fallback'}`}>
         {images.length > 0 ? <img src={images[0]} alt={event.title} loading="lazy" /> : <div className="event-row-fallback">{fallback}</div>}
         <div className="event-date-stamp">
           <span className="event-date-stamp-day">{day}</span>

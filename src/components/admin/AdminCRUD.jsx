@@ -1,25 +1,18 @@
 import { useState, useEffect } from 'react'
 import ImageUploader from './ImageUploader'
+import { ruInputToSchoolISO, schoolISOToRuInput } from '../../utils/schoolTime'
 import './AdminCRUD.css'
 
 // ── Дата-хелперы ───────────────────────────────────────────────────────────
 
-// "DD.MM.YYYY HH:MM"  →  "YYYY-MM-DDTHH:MM:00Z"
+// "DD.MM.YYYY HH:MM"  →  ISO в часовом поясе школы
 function ruToISO(str) {
-  if (!str) return ''
-  const m = str.match(/^(\d{2})\.(\d{2})\.(\d{4})(?:\s+(\d{2}):(\d{2}))?$/)
-  if (!m) return ''
-  const [, dd, mm, yyyy, hh = '00', min = '00'] = m
-  return `${yyyy}-${mm}-${dd}T${hh}:${min}:00Z`
+  return ruInputToSchoolISO(str)
 }
 
 // ISO / любое что Date() распарсит  →  "DD.MM.YYYY HH:MM"
 function isoToRu(iso) {
-  if (!iso) return ''
-  const d = new Date(iso)
-  if (isNaN(d)) return ''
-  const p = n => String(n).padStart(2, '0')
-  return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`
+  return schoolISOToRuInput(iso)
 }
 
 // ── Toast ─────────────────────────────────────────────────────────────────

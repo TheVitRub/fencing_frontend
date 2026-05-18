@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useFetch } from '../hooks/useFetch'
 import { getPage, listEvents } from '../api'
+import { formatSchoolDate, formatSchoolTime } from '../utils/schoolTime'
 import './Home.css'
 
 function parsePageContent(page) {
@@ -13,21 +14,19 @@ function parsePageContent(page) {
 }
 
 function formatDateShort(iso) {
-  const d = new Date(iso)
-  if (isNaN(d)) return ''
-  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+  return formatSchoolDate(iso, { day: 'numeric', month: 'long' })
 }
 
 function formatClock(date) {
-  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  return formatSchoolTime(date)
 }
 
 function formatBulletinTime(iso) {
   const d = new Date(iso)
   if (isNaN(d)) return 'Сейчас'
 
-  const date = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '')
-  const time = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  const date = formatSchoolDate(iso, { day: 'numeric', month: 'short' }).replace('.', '')
+  const time = formatSchoolTime(iso)
   return time === '00:00' ? date : `${date}, ${time}`
 }
 

@@ -19,13 +19,13 @@ function AchievementCard({ a }) {
           className="ach-card-media"
           onClick={() => images.length > 0 && setOpen(true)}
         >
-          <img src={images[0]} alt={a.title} loading="lazy" />
+          <img src={images[0]} alt={a.title} />
           {images.length > 1 && (
-            <span className="ach-card-count">📷 {images.length}</span>
+            <span className="ach-card-count">Фото {images.length}</span>
           )}
         </button>
       ) : (
-        <div className="ach-card-media ach-card-media--empty">🏆</div>
+        <div className="ach-card-media ach-card-media--empty">✦</div>
       )}
 
       <div className="ach-card-body">
@@ -74,7 +74,7 @@ export default function Achievements() {
 
       {list && list.length === 0 && (
         <div className="ach-empty">
-          <span className="ach-empty-glyph">🏆</span>
+          <span className="ach-empty-glyph">✦</span>
           <p>Достижения скоро появятся</p>
         </div>
       )}

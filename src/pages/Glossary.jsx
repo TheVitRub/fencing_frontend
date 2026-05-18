@@ -58,7 +58,14 @@ export default function Glossary() {
           {selected && (
             <article className="glossary-feature">
               <div className="glossary-feature-media">
-                {termImage(selected) ? <img src={termImage(selected)} alt={selected.term} /> : <span>{selected.term.slice(0, 1)}</span>}
+                {termImage(selected) ? (
+                  <img src={termImage(selected)} alt={selected.term} />
+                ) : (
+                  <span className="glossary-feature-placeholder" aria-hidden="true">
+                    <strong>⚔</strong>
+                    <small>{selected.category || 'Термин'}</small>
+                  </span>
+                )}
               </div>
               <div>
                 <span>{selected.category || 'Термин'}</span>

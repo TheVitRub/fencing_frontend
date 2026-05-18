@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { attendEvent, oauthStartUrl } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { rememberAttendance } from '../utils/attendanceStorage'
 import './AdminLogin.css'
 
 function defaultTarget(session, mode) {
@@ -34,12 +35,7 @@ export default function AdminLogin() {
       const attendId = searchParams.get('attend')
       if (attendId) {
         await attendEvent(attendId, 'going')
-        try {
-          const current = JSON.parse(localStorage.getItem('fc_attending_events') || '{}')
-          localStorage.setItem('fc_attending_events', JSON.stringify({ ...current, [attendId]: true }))
-        } catch {
-          localStorage.setItem('fc_attending_events', JSON.stringify({ [attendId]: true }))
-        }
+        rememberAttendance(session.user, attendId)
       }
 
       navigate(searchParams.get('next') || defaultTarget(session, mode))

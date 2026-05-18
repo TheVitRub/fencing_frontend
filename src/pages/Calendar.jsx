@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext'
 import { attendEvent, listEvents } from '../api'
 import { useFetch } from '../hooks/useFetch'
 import PageSection from '../components/common/PageSection'
+import { readAttendingEvents, rememberAttendance } from '../utils/attendanceStorage'
+import { formatSchoolTime } from '../utils/schoolTime'
 import './ClubPages.css'
 
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
@@ -18,9 +20,7 @@ function sameDay(a, b) {
 }
 
 function formatTime(iso) {
-  const d = new Date(iso)
-  if (isNaN(d)) return ''
-  return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  return formatSchoolTime(iso)
 }
 
 function buildMonthDays(monthDate) {
@@ -46,24 +46,16 @@ function canAttend(event) {
 
 export default function Calendar() {
   const { data: events, loading, setData } = useFetch(listEvents)
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const [monthDate, setMonthDate] = useState(() => new Date())
-  const [attending, setAttending] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('fc_attending_events') || '{}')
-    } catch {
-      return {}
-    }
-  })
+  const [attending, setAttending] = useState(() => readAttendingEvents(user))
+  const [attendanceBusy, setAttendanceBusy] = useState({})
+  const [attendanceErrors, setAttendanceErrors] = useState({})
   const today = startOfDay(new Date())
 
   useEffect(() => {
-    try {
-      localStorage.setItem('fc_attending_events', JSON.stringify(attending))
-    } catch {
-      // Storage can be blocked; signup still works on the backend.
-    }
-  }, [attending])
+    setAttending(readAttendingEvents(user))
+  }, [user?.id])
 
   const monthEvents = useMemo(() => {
     return (events || [])
@@ -85,10 +77,22 @@ export default function Calendar() {
   }
 
   async function markGoing(event) {
-    if (!isAuthenticated || attending[event.id]) return
-    await attendEvent(event.id, 'going')
-    setAttending(current => ({ ...current, [event.id]: true }))
-    if (setData) setData(await listEvents())
+    if (!isAuthenticated || attending[event.id] || attendanceBusy[event.id]) return
+    setAttendanceBusy(current => ({ ...current, [event.id]: true }))
+    setAttendanceErrors(current => ({ ...current, [event.id]: '' }))
+    try {
+      await attendEvent(event.id, 'going')
+      setAttending(current => ({ ...current, [event.id]: true }))
+      rememberAttendance(user, event.id)
+      if (setData) setData(await listEvents())
+    } catch (err) {
+      setAttendanceErrors(current => ({
+        ...current,
+        [event.id]: err?.response?.data?.error || 'Не удалось записаться. Попробуйте еще раз.',
+      }))
+    } finally {
+      setAttendanceBusy(current => ({ ...current, [event.id]: false }))
+    }
   }
 
   return (
@@ -119,24 +123,28 @@ export default function Calendar() {
             const isToday = sameDay(day, today)
 
             return (
-              <div className={`calendar-day${inMonth ? '' : ' is-muted'}${pastDay ? ' is-past' : ''}${isToday ? ' is-today' : ''}`} key={day.toISOString()}>
+              <div className={`calendar-day${inMonth ? '' : ' is-muted'}${pastDay ? ' is-past' : ''}${isToday ? ' is-today' : ''}${dayEvents.length === 0 ? ' is-empty' : ''}`} key={day.toISOString()}>
                 <span className="calendar-day-number">{day.getDate()}</span>
                 <div className="calendar-day-events">
-                  {dayEvents.map(event => (
-                    <article className={`calendar-event${event.status === 'cancelled' ? ' is-cancelled' : ''}${new Date(event.date) < today ? ' is-old' : ''}`} key={event.id}>
-                      <div className="calendar-event-top">
-                        <time>{formatTime(event.date)}</time>
-                        <strong>{eventLabel(event)}</strong>
-                      </div>
-                      <p>{event.title}</p>
-                      {event.location && <small>{event.location}</small>}
-                      {canAttend(event) && (
-                        isAuthenticated
-                          ? <button type="button" onClick={() => markGoing(event)} disabled={!!attending[event.id]}>{attending[event.id] ? 'Вы записаны' : 'Записаться'}</button>
-                          : <Link to={`/login?next=/calendar&attend=${event.id}`}>Войти и записаться</Link>
-                      )}
-                    </article>
-                  ))}
+                  {dayEvents.map(event => {
+                    const busy = !!attendanceBusy[event.id]
+                    return (
+                      <article className={`calendar-event${event.status === 'cancelled' ? ' is-cancelled' : ''}${new Date(event.date) < today ? ' is-old' : ''}`} key={event.id}>
+                        <div className="calendar-event-top">
+                          <time>{formatTime(event.date)}</time>
+                          <strong>{eventLabel(event)}</strong>
+                        </div>
+                        <p>{event.title}</p>
+                        {event.location && <small>{event.location}</small>}
+                        {canAttend(event) && (
+                          isAuthenticated
+                            ? <button type="button" onClick={() => markGoing(event)} disabled={!!attending[event.id] || busy}>{busy ? 'Записываю...' : attending[event.id] ? 'Вы записаны' : 'Записаться'}</button>
+                            : <Link to={`/login?next=/calendar&attend=${event.id}`}>Войти и записаться</Link>
+                        )}
+                        {attendanceErrors[event.id] && <em className="calendar-event-error">{attendanceErrors[event.id]}</em>}
+                      </article>
+                    )
+                  })}
                 </div>
               </div>
             )
