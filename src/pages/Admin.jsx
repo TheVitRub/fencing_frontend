@@ -150,6 +150,7 @@ export default function Admin() {
                 { key: 'location',    label: 'Место',      placeholder: 'г. Москва, ул. ...' },
                 { key: 'type',        label: 'Тип',        placeholder: 'training / tournament / open / event' },
                 { key: 'status',      label: 'Статус',     placeholder: 'scheduled / changed / cancelled / done' },
+                { key: 'discipline',  label: 'Дисциплина', placeholder: 'CourtSword' },
                 { key: 'description', label: 'Описание',   type: 'textarea', placeholder: 'Что будет на мероприятии…' },
                 { key: 'images',      label: 'Фотографии', type: 'image-gallery', max: 15 },
               ]}

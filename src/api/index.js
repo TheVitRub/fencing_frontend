@@ -4,6 +4,7 @@ export const login = (login, password) =>
   api.post('/auth/login', { login, password }).then(r => r.data)
 export const register = data => api.post('/auth/register', data).then(r => r.data)
 export const me = () => api.get('/admin/me').then(r => r.data)
+export const oauthStartUrl = provider => `/api/auth/oauth/${provider}/start`
 
 export const getPage = slug => api.get(`/pages/${slug}`).then(r => r.data)
 export const upsertPage = (slug, data) => api.put(`/admin/pages/${slug}`, data).then(r => r.data)

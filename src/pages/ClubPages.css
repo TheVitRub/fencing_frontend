@@ -3,6 +3,178 @@
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
+.calendar-shell {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.5);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.calendar-head {
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  text-align: center;
+}
+.calendar-actions {
+  align-items: center;
+  background: rgba(245,237,224,0.55);
+  border-bottom: 1px solid rgba(196,165,106,0.55);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.85rem;
+}
+.calendar-actions button {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--color-gold);
+  cursor: pointer;
+  font-family: var(--font-title);
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.7rem;
+}
+.calendar-actions span {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+.calendar-head button {
+  border: 0;
+  background: transparent;
+  color: var(--color-gold);
+  cursor: pointer;
+  font-size: 2rem;
+  min-height: 56px;
+}
+.calendar-head span {
+  color: var(--color-gold-dim);
+  display: block;
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.calendar-head h3 {
+  font-size: 1.25rem;
+  text-transform: capitalize;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.calendar-weekday {
+  background: rgba(196,165,106,0.12);
+  border-bottom: 1px solid rgba(196,165,106,0.6);
+  color: var(--color-gold);
+  font-family: var(--font-title);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  padding: 0.45rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+.calendar-day {
+  border-bottom: 1px solid rgba(196,165,106,0.35);
+  border-right: 1px solid rgba(196,165,106,0.35);
+  min-height: 148px;
+  padding: 0.45rem;
+  position: relative;
+}
+.calendar-day:nth-child(7n + 7) {
+  border-right: 0;
+}
+.calendar-day.is-muted {
+  background: rgba(237,229,211,0.42);
+  color: var(--color-muted);
+}
+.calendar-day.is-past {
+  opacity: 0.55;
+}
+.calendar-day.is-today {
+  background: rgba(139,26,26,0.06);
+  box-shadow: inset 0 0 0 2px rgba(139,26,26,0.22);
+}
+.calendar-day.is-today .calendar-day-number {
+  background: var(--color-crimson);
+  border-radius: 100px;
+  color: var(--color-bg);
+  display: inline-flex;
+  min-width: 24px;
+  justify-content: center;
+  padding: 0 0.35rem;
+}
+.calendar-day-number {
+  color: var(--color-gold);
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+}
+.calendar-day-events {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+.calendar-event {
+  background: #fff;
+  border: 1px solid rgba(196,165,106,0.7);
+  border-left: 3px solid var(--color-crimson);
+  border-radius: 4px;
+  padding: 0.45rem;
+}
+.calendar-event.is-cancelled {
+  border-left-color: var(--color-muted);
+}
+.calendar-event-top {
+  align-items: center;
+  display: flex;
+  gap: 0.35rem;
+  justify-content: space-between;
+}
+.calendar-event time {
+  color: var(--color-crimson);
+  font-family: var(--font-title);
+  font-size: 0.74rem;
+}
+.calendar-event strong {
+  color: var(--color-gold);
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+.calendar-event p {
+  color: var(--color-text);
+  font-size: 0.84rem;
+  line-height: 1.25;
+  margin: 0.25rem 0;
+}
+.calendar-event small {
+  color: var(--color-muted);
+  display: block;
+  font-size: 0.76rem;
+  line-height: 1.2;
+}
+.calendar-event button,
+.calendar-event a,
+.club-inline-btn {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: rgba(245,237,224,0.8);
+  color: var(--color-gold);
+  cursor: pointer;
+  display: inline-block;
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  margin-top: 0.35rem;
+  padding: 0.25rem 0.45rem;
+}
+.calendar-event button:hover,
+.calendar-event a:hover,
+.club-inline-btn:hover {
+  background: var(--color-gold);
+  color: var(--color-bg);
+}
 .club-toolbar button {
   border: 1px solid var(--color-border);
   background: rgba(255,255,255,0.5);
@@ -105,6 +277,19 @@
   margin-bottom: 1rem;
 }
 @media (max-width: 640px) {
+  .calendar-grid {
+    display: block;
+  }
+  .calendar-weekday {
+    display: none;
+  }
+  .calendar-day {
+    border-right: 0;
+    min-height: auto;
+  }
+  .calendar-day.is-muted:empty {
+    display: none;
+  }
   .club-profile {
     grid-template-columns: 1fr;
   }

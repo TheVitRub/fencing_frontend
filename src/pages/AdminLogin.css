@@ -58,6 +58,38 @@
   margin-bottom: 1.5rem;
 }
 .login-form { text-align: left; }
+.oauth-buttons {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+.oauth-buttons a {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-cream);
+  display: block;
+  font-family: var(--font-title);
+  letter-spacing: 0.08em;
+  padding: 0.55rem 0.8rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+.oauth-buttons a:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+.login-divider {
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  margin: 0.85rem 0 1rem;
+  text-align: center;
+}
+.login-divider span {
+  background: var(--color-surface);
+  padding: 0 0.6rem;
+  position: relative;
+  top: -0.9rem;
+}
 .login-error {
   color: var(--color-crimson);
   font-size: 0.9rem;

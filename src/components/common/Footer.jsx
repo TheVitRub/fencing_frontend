@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="footer-ornament">✦ ⚔ ✦</div>
         <p className="footer-school">Ferrum et Gloria — Школа исторического фехтования</p>
         <div className="footer-contacts">
-          <a href="https://vk.com/ferrum_gloria" target="_blank" rel="noopener noreferrer">vk.com/ferrum_gloria</a>
+          <a href="https://vk.ru/historical_martial_arts_siberia" target="_blank" rel="noopener noreferrer">vk.ru/historical_martial_arts_siberia</a>
           <span className="footer-sep">·</span>
           <a href="mailto:ferrum.gloria@mail.ru">ferrum.gloria@mail.ru</a>
           <span className="footer-sep">·</span>

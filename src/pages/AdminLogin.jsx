@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { oauthStartUrl } from '../api'
 import { useAuth } from '../context/AuthContext'
 import './AdminLogin.css'
 
@@ -40,6 +41,11 @@ export default function AdminLogin() {
         <h1 className="login-title">{mode === 'register' ? 'Вступить в хронику' : 'Вход в цитадель'}</h1>
         <p className="login-sub">{mode === 'register' ? 'Аккаунт гостя создаётся сразу, роль ученика назначат старшие' : 'Для админов, инструкторов и учеников'}</p>
         <form onSubmit={submit} className="login-form">
+          <div className="oauth-buttons">
+            <a href={oauthStartUrl('vk')}>Войти через VK</a>
+            <a href={oauthStartUrl('google')}>Войти через Google</a>
+          </div>
+          <div className="login-divider"><span>или</span></div>
           <div className="form-field">
             <label>Логин</label>
             <input value={login} onChange={e => setLogin(e.target.value)} autoComplete="username" />
