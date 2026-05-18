@@ -27,6 +27,8 @@ export const listNotifications = () => api.get('/admin/notifications').then(r =>
 export const markNotificationRead = id => api.put(`/admin/notifications/${id}/read`).then(r => r.data)
 
 export const listUsers = () => api.get('/admin/users').then(r => r.data)
+export const listStudentUsers = () => api.get('/admin/students').then(r => r.data)
+export const listInstructorUsers = () => api.get('/admin/instructor-users').then(r => r.data)
 export const updateUserRole = (id, role) => api.put(`/admin/users/${id}/role`, { role }).then(r => r.data)
 
 export const listInstructors = () => api.get('/instructors').then(r => r.data)

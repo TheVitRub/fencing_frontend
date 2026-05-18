@@ -1,12 +1,19 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { oauthStartUrl } from '../api'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { attendEvent, oauthStartUrl } from '../api'
 import { useAuth } from '../context/AuthContext'
 import './AdminLogin.css'
 
+function defaultTarget(session, mode) {
+  const role = session?.user?.role
+  if (role === 'admin' || role === 'founder') return '/admin'
+  if (mode === 'register') return '/profile'
+  return '/profile'
+}
 export default function AdminLogin() {
   const { signIn, signUp } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [mode, setMode] = useState('login')
   const [login, setLogin] = useState('')
   const [email, setEmail] = useState('')
@@ -15,20 +22,29 @@ export default function AdminLogin() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const submit = async e => {
-    e.preventDefault()
+  const submit = async event => {
+    event.preventDefault()
     setError('')
     setLoading(true)
     try {
-      if (mode === 'register') {
-        await signUp({ login, email, display_name: displayName, password })
-        navigate('/events')
-      } else {
-        await signIn(login, password)
-        navigate('/admin')
+      const session = mode === 'register'
+        ? await signUp({ login, email, display_name: displayName, password })
+        : await signIn(login, password)
+
+      const attendId = searchParams.get('attend')
+      if (attendId) {
+        await attendEvent(attendId, 'going')
+        try {
+          const current = JSON.parse(localStorage.getItem('fc_attending_events') || '{}')
+          localStorage.setItem('fc_attending_events', JSON.stringify({ ...current, [attendId]: true }))
+        } catch {
+          localStorage.setItem('fc_attending_events', JSON.stringify({ [attendId]: true }))
+        }
       }
-    } catch {
-      setError(mode === 'register' ? 'Не удалось зарегистрироваться' : 'Неверный логин или пароль')
+
+      navigate(searchParams.get('next') || defaultTarget(session, mode))
+    } catch (err) {
+      setError(err?.response?.data?.error || (mode === 'register' ? 'Не удалось зарегистрироваться' : 'Неверный логин или пароль'))
     } finally {
       setLoading(false)
     }
@@ -38,8 +54,12 @@ export default function AdminLogin() {
     <div className="login-page">
       <div className="login-box">
         <div className="login-emblem">⚔</div>
-        <h1 className="login-title">{mode === 'register' ? 'Вступить в хронику' : 'Вход в цитадель'}</h1>
-        <p className="login-sub">{mode === 'register' ? 'Аккаунт гостя создаётся сразу, роль ученика назначат старшие' : 'Для админов, инструкторов и учеников'}</p>
+        <h1 className="login-title">{mode === 'register' ? 'Создать аккаунт' : 'Вход на сайт'}</h1>
+        <p className="login-sub">
+          {mode === 'register'
+            ? 'Сначала создается гостевой аккаунт, роль ученика назначат старшие.'
+            : 'Для админов, инструкторов, учеников и гостей.'}
+        </p>
         <form onSubmit={submit} className="login-form">
           <div className="oauth-buttons">
             <a href={oauthStartUrl('vk')}>Войти через VK</a>
@@ -48,23 +68,23 @@ export default function AdminLogin() {
           <div className="login-divider"><span>или</span></div>
           <div className="form-field">
             <label>Логин</label>
-            <input value={login} onChange={e => setLogin(e.target.value)} autoComplete="username" />
+            <input value={login} onChange={event => setLogin(event.target.value)} autoComplete="username" />
           </div>
           {mode === 'register' && (
             <>
               <div className="form-field">
                 <label>Имя на сайте</label>
-                <input value={displayName} onChange={e => setDisplayName(e.target.value)} />
+                <input value={displayName} onChange={event => setDisplayName(event.target.value)} />
               </div>
               <div className="form-field">
                 <label>Email</label>
-                <input value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
+                <input value={email} onChange={event => setEmail(event.target.value)} autoComplete="email" />
               </div>
             </>
           )}
           <div className="form-field">
             <label>Пароль</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" />
+            <input type="password" value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password" />
           </div>
           {error && <p className="login-error">{error}</p>}
           <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>

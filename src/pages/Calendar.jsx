@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { attendEvent, listEvents } from '../api'
@@ -11,7 +11,6 @@ const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 function startOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate())
 }
-
 function sameDay(a, b) {
   return a.getFullYear() === b.getFullYear()
     && a.getMonth() === b.getMonth()
@@ -24,10 +23,6 @@ function formatTime(iso) {
   return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
 }
 
-function isFutureEvent(event) {
-  return new Date(event.date) >= startOfDay(new Date())
-}
-
 function buildMonthDays(monthDate) {
   const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1)
   const startOffset = (first.getDay() + 6) % 7
@@ -35,9 +30,9 @@ function buildMonthDays(monthDate) {
   gridStart.setDate(first.getDate() - startOffset)
 
   return Array.from({ length: 42 }, (_, index) => {
-    const d = new Date(gridStart)
-    d.setDate(gridStart.getDate() + index)
-    return d
+    const day = new Date(gridStart)
+    day.setDate(gridStart.getDate() + index)
+    return day
   })
 }
 
@@ -45,12 +40,30 @@ function eventLabel(event) {
   return event.discipline || (event.title?.toLowerCase().includes('courtsword') ? 'CourtSword' : event.type || 'Занятие')
 }
 
+function canAttend(event) {
+  return new Date(event.date) >= startOfDay(new Date()) && event.status !== 'cancelled'
+}
+
 export default function Calendar() {
   const { data: events, loading, setData } = useFetch(listEvents)
   const { isAuthenticated } = useAuth()
   const [monthDate, setMonthDate] = useState(() => new Date())
-  const [attending, setAttending] = useState({})
+  const [attending, setAttending] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('fc_attending_events') || '{}')
+    } catch {
+      return {}
+    }
+  })
   const today = startOfDay(new Date())
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('fc_attending_events', JSON.stringify(attending))
+    } catch {
+      // Storage can be blocked; signup still works on the backend.
+    }
+  }, [attending])
 
   const monthEvents = useMemo(() => {
     return (events || [])
@@ -59,27 +72,27 @@ export default function Calendar() {
         return !isNaN(d)
           && d.getFullYear() === monthDate.getFullYear()
           && d.getMonth() === monthDate.getMonth()
-          && d >= today
       })
       .sort((a, b) => new Date(a.date) - new Date(b.date))
-  }, [events, monthDate, today])
+  }, [events, monthDate])
 
   const days = useMemo(() => buildMonthDays(monthDate), [monthDate])
   const monthTitle = monthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
+  const futureEventsCount = monthEvents.filter(event => new Date(event.date) >= today).length
 
   function shiftMonth(delta) {
     setMonthDate(current => new Date(current.getFullYear(), current.getMonth() + delta, 1))
   }
 
   async function markGoing(event) {
-    if (!isAuthenticated) return
+    if (!isAuthenticated || attending[event.id]) return
     await attendEvent(event.id, 'going')
     setAttending(current => ({ ...current, [event.id]: true }))
     if (setData) setData(await listEvents())
   }
 
   return (
-    <PageSection title="Календарь занятий" subtitle="Месяц занятий, дисциплина и запись прямо в ячейке">
+    <PageSection title="Календарь занятий" subtitle="Месяц школы: дисциплина, время и запись прямо в ячейке">
       <div className="calendar-shell">
         <header className="calendar-head">
           <button type="button" onClick={() => shiftMonth(-1)} aria-label="Предыдущий месяц">‹</button>
@@ -92,7 +105,7 @@ export default function Calendar() {
 
         <div className="calendar-actions">
           <button type="button" onClick={() => setMonthDate(new Date())}>Сегодня</button>
-          <span>{monthEvents.length} занятий в месяце</span>
+          <span>{futureEventsCount} будущих занятий в месяце</span>
         </div>
 
         {loading && <p className="loading-text">Загрузка...</p>}
@@ -102,32 +115,28 @@ export default function Calendar() {
           {days.map(day => {
             const inMonth = day.getMonth() === monthDate.getMonth()
             const dayEvents = monthEvents.filter(event => sameDay(new Date(event.date), day))
-            const pastDay = day < startOfDay(new Date())
-
+            const pastDay = day < today
             const isToday = sameDay(day, today)
 
             return (
               <div className={`calendar-day${inMonth ? '' : ' is-muted'}${pastDay ? ' is-past' : ''}${isToday ? ' is-today' : ''}`} key={day.toISOString()}>
                 <span className="calendar-day-number">{day.getDate()}</span>
                 <div className="calendar-day-events">
-                  {dayEvents.map(event => {
-                    const canAttend = isFutureEvent(event) && event.status !== 'cancelled'
-                    return (
-                      <article className={`calendar-event${event.status === 'cancelled' ? ' is-cancelled' : ''}`} key={event.id}>
-                        <div className="calendar-event-top">
-                          <time>{formatTime(event.date)}</time>
-                          <strong>{eventLabel(event)}</strong>
-                        </div>
-                        <p>{event.title}</p>
-                        {event.location && <small>{event.location}</small>}
-                        {canAttend && (
-                          isAuthenticated
-                            ? <button type="button" onClick={() => markGoing(event)}>{attending[event.id] ? 'Вы записаны' : 'Записаться'}</button>
-                            : <Link to="/login">Войти для записи</Link>
-                        )}
-                      </article>
-                    )
-                  })}
+                  {dayEvents.map(event => (
+                    <article className={`calendar-event${event.status === 'cancelled' ? ' is-cancelled' : ''}${new Date(event.date) < today ? ' is-old' : ''}`} key={event.id}>
+                      <div className="calendar-event-top">
+                        <time>{formatTime(event.date)}</time>
+                        <strong>{eventLabel(event)}</strong>
+                      </div>
+                      <p>{event.title}</p>
+                      {event.location && <small>{event.location}</small>}
+                      {canAttend(event) && (
+                        isAuthenticated
+                          ? <button type="button" onClick={() => markGoing(event)} disabled={!!attending[event.id]}>{attending[event.id] ? 'Вы записаны' : 'Записаться'}</button>
+                          : <Link to={`/login?next=/calendar&attend=${event.id}`}>Войти и записаться</Link>
+                      )}
+                    </article>
+                  ))}
                 </div>
               </div>
             )

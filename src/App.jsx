@@ -8,6 +8,7 @@ import Calendar from './pages/Calendar'
 import Instructors from './pages/Instructors'
 import Students from './pages/Students'
 import Glossary from './pages/Glossary'
+import Profile from './pages/Profile'
 import Plans from './pages/Plans'
 import Honor from './pages/Honor'
 import Achievements from './pages/Achievements'
@@ -16,8 +17,13 @@ import AdminLogin from './pages/AdminLogin'
 import Admin from './pages/Admin'
 
 function ProtectedRoute({ children }) {
-  const { isAdmin } = useAuth()
-  return isAdmin ? children : <Navigate to="/login" replace />
+  const { isInstructor } = useAuth()
+  return isInstructor ? children : <Navigate to="/login" replace />
+}
+
+function AuthenticatedRoute({ children }) {
+  const { isAuthenticated } = useAuth()
+  return isAuthenticated ? children : <Navigate to="/login" replace />
 }
 
 function Layout() {
@@ -32,6 +38,7 @@ function Layout() {
           <Route path="/instructors" element={<Instructors />} />
           <Route path="/students" element={<Students />} />
           <Route path="/glossary" element={<Glossary />} />
+          <Route path="/profile" element={<AuthenticatedRoute><Profile /></AuthenticatedRoute>} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/honor" element={<Honor />} />
           <Route path="/achievements" element={<Achievements />} />

@@ -35,11 +35,15 @@ export function AuthProvider({ children }) {
   }
 
   const signIn = async (loginVal, password) => {
-    applySession(await apiLogin(loginVal, password))
+    const session = await apiLogin(loginVal, password)
+    applySession(session)
+    return session
   }
 
   const signUp = async data => {
-    applySession(await apiRegister(data))
+    const session = await apiRegister(data)
+    applySession(session)
+    return session
   }
 
   const signOut = () => {

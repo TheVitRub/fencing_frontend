@@ -137,7 +137,8 @@
 }
 
 .form-field--error input,
-.form-field--error textarea {
+.form-field--error textarea,
+.form-field--error select {
   border-color: var(--color-crimson) !important;
 }
 

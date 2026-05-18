@@ -51,7 +51,7 @@ function Toast({ message, type, onClose }) {
  *   'image'          — загрузка одного изображения
  *   'image-gallery'  — загрузка массива изображений
  */
-export default function AdminCRUD({ title, fields, items, onSave, onDelete, loading }) {
+export default function AdminCRUD({ title, fields, items, onSave, onDelete, loading, displayKey, getItemTitle, getItemMeta }) {
   const [form, setForm]   = useState(null)
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState({})
@@ -170,10 +170,19 @@ export default function AdminCRUD({ title, fields, items, onSave, onDelete, load
 
   // ── Отображение значения в списке ─────────────────────────────────────
 
+  const itemTitle = item => {
+    if (getItemTitle) return getItemTitle(item)
+    if (displayKey && item[displayKey]) return item[displayKey]
+    return item.title || item.name || item.term || item.display_name || item.login || item.period || item.discipline || `#${item.id}`
+  }
+
   const itemSubtitle = item => {
+    if (getItemMeta) return getItemMeta(item)
     if (item.year)     return String(item.year)
     if (item.date)     return isoToRu(item.date)
     if (item.period)   return item.period
+    if (item.category) return item.category
+    if (item.visibility) return item.visibility
     return null
   }
 
@@ -195,7 +204,7 @@ export default function AdminCRUD({ title, fields, items, onSave, onDelete, load
             <div className="crud-item" key={item.id}>
               <div className="crud-item-info">
                 <span className="crud-item-label">
-                  {item.title || item.name || item.period || `#${item.id}`}
+                  {itemTitle(item)}
                 </span>
                 {sub && <span className="crud-item-meta">{sub}</span>}
               </div>
@@ -240,6 +249,16 @@ export default function AdminCRUD({ title, fields, items, onSave, onDelete, load
                       placeholder="ДД.ММ.ГГГГ ЧЧ:ММ"
                       maxLength={16}
                     />
+                  ) : f.type === 'select' || f.type === 'relation-select' ? (
+                    <select
+                      value={form[f.key] ?? ''}
+                      onChange={e => change(f.key, e.target.value, f.type)}
+                    >
+                      <option value="">{f.placeholder || 'Выберите'}</option>
+                      {(f.options || []).map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
                   ) : f.type === 'image-gallery' ? (
                     <ImageUploader
                       value={Array.isArray(form[f.key]) ? form[f.key] : []}

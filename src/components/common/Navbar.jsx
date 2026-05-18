@@ -4,20 +4,20 @@ import { useAuth } from '../../context/AuthContext'
 import './Navbar.css'
 
 const links = [
-  { to: '/',             label: 'Главная' },
-  { to: '/events',       label: 'События' },
-  { to: '/calendar',     label: 'Календарь' },
-  { to: '/instructors',  label: 'Инструкторы' },
-  { to: '/students',     label: 'Ученикам' },
-  { to: '/glossary',     label: 'Глоссарий' },
-  { to: '/plans',        label: 'Планы' },
-  { to: '/honor',        label: 'Доска почёта' },
+  { to: '/', label: 'Главная' },
+  { to: '/events', label: 'События' },
+  { to: '/calendar', label: 'Календарь' },
+  { to: '/instructors', label: 'Инструкторы' },
+  { to: '/students', label: 'Ученикам' },
+  { to: '/glossary', label: 'Глоссарий' },
+  { to: '/plans', label: 'Планы' },
+  { to: '/honor', label: 'Доска почета' },
   { to: '/achievements', label: 'Достижения' },
-  { to: '/founder',      label: 'Основатель' },
+  { to: '/founder', label: 'Основатель' },
 ]
 
 export default function Navbar() {
-  const { isAuthenticated, isAdmin, user, signOut } = useAuth()
+  const { isAuthenticated, isInstructor, signOut } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
 
   const closeMenu = () => setIsOpen(false)
@@ -42,28 +42,33 @@ export default function Navbar() {
           <span />
         </button>
         <nav id="site-navigation" className={`navbar-links${isOpen ? ' is-open' : ''}`}>
-          {links.map(l => (
+          {links.map(link => (
             <NavLink
-              key={l.to}
-              to={l.to}
-              end={l.to === '/'}
+              key={link.to}
+              to={link.to}
+              end={link.to === '/'}
               onClick={closeMenu}
-              className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
+              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
             >
-              {l.label}
+              {link.label}
             </NavLink>
           ))}
-          {isAdmin && (
-            <NavLink to="/admin" onClick={closeMenu} className={({ isActive }) => 'nav-link nav-admin' + (isActive ? ' active' : '')}>
-              Админ
+          {isAuthenticated && (
+            <NavLink to="/profile" onClick={closeMenu} className={({ isActive }) => `nav-link nav-admin${isActive ? ' active' : ''}`}>
+              Кабинет
+            </NavLink>
+          )}
+          {isInstructor && (
+            <NavLink to="/admin" onClick={closeMenu} className={({ isActive }) => `nav-link nav-admin${isActive ? ' active' : ''}`}>
+              Панель
             </NavLink>
           )}
           {isAuthenticated ? (
             <button className="nav-link nav-button" onClick={() => { signOut(); closeMenu() }}>
-              {user?.display_name || user?.login || 'Выйти'}
+              Выйти
             </button>
           ) : (
-            <NavLink to="/login" onClick={closeMenu} className={({ isActive }) => 'nav-link nav-admin' + (isActive ? ' active' : '')}>
+            <NavLink to="/login" onClick={closeMenu} className={({ isActive }) => `nav-link nav-admin${isActive ? ' active' : ''}`}>
               Вход
             </NavLink>
           )}
