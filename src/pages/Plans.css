@@ -1,6 +1,6 @@
 .plan-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
   gap: 1.25rem;
   margin-top: 1.5rem;
 }
@@ -112,4 +112,24 @@
   padding: 4rem 1rem;
   color: var(--color-muted);
   font-style: italic;
+}
+
+@media (max-width: 560px) {
+  .plan-card {
+    padding: 1.15rem;
+  }
+
+  .plan-card-header {
+    gap: 0.7rem;
+  }
+
+  .plan-card-num {
+    font-size: 1.45rem;
+  }
+
+  .plan-card-divider {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
 }

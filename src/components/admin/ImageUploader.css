@@ -123,3 +123,17 @@
   color: var(--color-muted);
   font-style: italic;
 }
+
+@media (max-width: 640px) {
+  .img-uploader-grid {
+    grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  }
+
+  .img-uploader-thumb-actions {
+    opacity: 1;
+  }
+
+  .img-uploader-drop {
+    padding: 1rem 0.75rem;
+  }
+}

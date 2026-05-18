@@ -82,3 +82,31 @@
   border-color: var(--color-crimson);
 }
 .admin-content { max-width: 800px; }
+
+@media (max-width: 640px) {
+  .admin-page {
+    padding: 1.25rem 0 3rem;
+  }
+
+  .admin-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .admin-title {
+    font-size: 1.25rem;
+  }
+
+  .admin-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.75rem;
+  }
+
+  .admin-tab {
+    flex: 0 0 auto;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.74rem;
+  }
+}

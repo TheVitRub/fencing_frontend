@@ -52,3 +52,19 @@
   margin-top: 0.5rem;
   font-style: italic;
 }
+
+@media (max-width: 560px) {
+  .footer {
+    margin-top: 3rem;
+    padding: 2rem 0 1.25rem;
+  }
+
+  .footer-contacts {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .footer-sep {
+    display: none;
+  }
+}

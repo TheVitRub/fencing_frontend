@@ -32,7 +32,7 @@
 /* ── Сетка карточек ──────────────────────────────────────────────────────── */
 .ach-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 1.25rem;
 }
 
@@ -145,4 +145,20 @@
   font-size: 3rem;
   margin-bottom: 0.75rem;
   opacity: 0.5;
+}
+
+@media (max-width: 560px) {
+  .ach-year-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .ach-year-line {
+    width: 100%;
+  }
+
+  .ach-card-body {
+    padding: 0.95rem 1rem 1rem;
+  }
 }

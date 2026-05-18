@@ -193,3 +193,45 @@
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 640px) {
+  .admin-crud {
+    padding: 1rem;
+  }
+
+  .admin-crud-header,
+  .crud-item,
+  .crud-modal-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .crud-item-actions {
+    width: 100%;
+  }
+
+  .crud-item-actions .btn {
+    flex: 1;
+  }
+
+  .crud-modal-overlay {
+    align-items: flex-start;
+    padding: 0.75rem;
+  }
+
+  .crud-modal {
+    max-height: calc(100vh - 1.5rem);
+    padding: 1.25rem;
+  }
+
+  .crud-modal-actions .btn {
+    width: 100%;
+  }
+
+  .crud-toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: none;
+  }
+}

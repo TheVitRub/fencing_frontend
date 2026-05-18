@@ -40,6 +40,20 @@
 }
 
 @media (max-width: 640px) {
-  .founder-layout { flex-direction: column; }
-  .founder-photo-wrap { width: 100%; height: 200px; }
+  .founder-layout {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .founder-photo-wrap {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+  .founder-name {
+    font-size: 1.45rem;
+  }
+  .founder-bio {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
 }

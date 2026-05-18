@@ -100,9 +100,18 @@
 }
 
 @media (max-width: 640px) {
+  .honor-grid {
+    gap: 1rem;
+  }
+
+  .honor-card {
+    padding: 1.35rem 1rem 1rem;
+  }
+
   .honor-card.is-expanded {
     grid-template-columns: 1fr;
     text-align: center;
+    padding: 1.2rem 1rem;
   }
   .honor-card.is-expanded .honor-photo-wrap {
     width: 120px;
