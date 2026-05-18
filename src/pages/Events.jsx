@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useFetch } from '../hooks/useFetch'
 import { useAuth } from '../context/AuthContext'
-import { attendEvent, createComment, getPage, listComments, listEvents } from '../api'
+import { attendEvent, createComment, getPage, listComments, listEventAttendees, listEvents } from '../api'
 import ImageGallery from '../components/common/ImageGallery'
 import PageSection from '../components/common/PageSection'
 import './Events.css'
@@ -41,6 +41,23 @@ function formatCommentTime(iso) {
 
 function isUpcoming(iso) {
   return new Date(iso) > new Date()
+}
+
+function readAttendingMap() {
+  try {
+    return JSON.parse(localStorage.getItem('fc_attending_events') || '{}')
+  } catch {
+    return {}
+  }
+}
+
+function rememberAttendance(eventId) {
+  try {
+    const current = readAttendingMap()
+    localStorage.setItem('fc_attending_events', JSON.stringify({ ...current, [eventId]: true }))
+  } catch {
+    // Private browsing can block storage; backend write is still the source of truth.
+  }
 }
 
 function EventComments({ eventId }) {
@@ -111,19 +128,52 @@ function EventComments({ eventId }) {
 }
 
 function EventRow({ event, idx }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const [expanded, setExpanded] = useState(false)
-  const [attending, setAttending] = useState(false)
+  const [attending, setAttending] = useState(() => !!readAttendingMap()[event.id])
+  const [attendeeCount, setAttendeeCount] = useState(null)
+  const [attendanceBusy, setAttendanceBusy] = useState(false)
+  const [attendanceError, setAttendanceError] = useState('')
   const { day, month, year, full, time } = formatDateParts(event.date)
   const images = (event.images && event.images.length > 0) ? event.images : event.image_url ? [event.image_url] : []
   const fallback = FALLBACK_GLYPHS[idx % FALLBACK_GLYPHS.length]
   const upcoming = isUpcoming(event.date)
   const longDesc = event.description && event.description.length > 240
 
+  useEffect(() => {
+    let cancelled = false
+    if (!upcoming) return undefined
+    listEventAttendees(event.id)
+      .then(items => {
+        if (cancelled) return
+        setAttendeeCount(items.length)
+        if (user?.id && items.some(item => item.user_id === user.id)) {
+          setAttending(true)
+          rememberAttendance(event.id)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setAttendeeCount(null)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [event.id, upcoming, user?.id])
+
   async function markGoing() {
-    if (!isAuthenticated) return
-    await attendEvent(event.id, 'going')
-    setAttending(true)
+    if (!isAuthenticated || attending || attendanceBusy) return
+    setAttendanceBusy(true)
+    setAttendanceError('')
+    try {
+      await attendEvent(event.id, 'going')
+      setAttending(true)
+      rememberAttendance(event.id)
+      setAttendeeCount(count => typeof count === 'number' ? count + 1 : count)
+    } catch (err) {
+      setAttendanceError(err?.response?.data?.error || 'Не удалось записаться. Попробуйте еще раз.')
+    } finally {
+      setAttendanceBusy(false)
+    }
   }
 
   return (
@@ -162,10 +212,14 @@ function EventRow({ event, idx }) {
           )}
           {upcoming && event.status !== 'cancelled' && (
             isAuthenticated
-              ? <button className="event-row-more" onClick={markGoing}>{attending ? 'Вы записаны' : 'Я приду'}</button>
-              : <Link className="event-row-more" to="/login">Войти, чтобы записаться</Link>
+              ? <button className="event-row-more" onClick={markGoing} disabled={attending || attendanceBusy}>{attendanceBusy ? 'Записываю...' : attending ? 'Вы записаны' : 'Я приду'}</button>
+              : <Link className="event-row-more" to={`/login?next=/events&attend=${event.id}`}>Войти и записаться</Link>
+          )}
+          {typeof attendeeCount === 'number' && (
+            <span className="event-attendee-count">{attendeeCount} придут</span>
           )}
         </div>
+        {attendanceError && <p className="event-attendance-error">{attendanceError}</p>}
 
         {expanded && images.length > 1 && <ImageGallery images={images} />}
         <EventComments eventId={event.id} />

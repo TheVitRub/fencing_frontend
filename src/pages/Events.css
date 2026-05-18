@@ -255,6 +255,25 @@
   color: var(--color-crimson);
   border-color: var(--color-crimson);
 }
+.event-row-more:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+.event-row-more:disabled:hover {
+  color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+}
+.event-attendee-count {
+  color: var(--color-muted);
+  font-family: var(--font-title);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+}
+.event-attendance-error {
+  color: var(--color-crimson);
+  font-size: 0.86rem;
+  margin-top: -0.15rem;
+}
 
 .event-reactions {
   display: flex;
