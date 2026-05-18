@@ -50,6 +50,7 @@ export default function Calendar() {
   const { isAuthenticated } = useAuth()
   const [monthDate, setMonthDate] = useState(() => new Date())
   const [attending, setAttending] = useState({})
+  const today = startOfDay(new Date())
 
   const monthEvents = useMemo(() => {
     return (events || [])
@@ -58,13 +59,13 @@ export default function Calendar() {
         return !isNaN(d)
           && d.getFullYear() === monthDate.getFullYear()
           && d.getMonth() === monthDate.getMonth()
+          && d >= today
       })
       .sort((a, b) => new Date(a.date) - new Date(b.date))
-  }, [events, monthDate])
+  }, [events, monthDate, today])
 
   const days = useMemo(() => buildMonthDays(monthDate), [monthDate])
   const monthTitle = monthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
-  const today = startOfDay(new Date())
 
   function shiftMonth(delta) {
     setMonthDate(current => new Date(current.getFullYear(), current.getMonth() + delta, 1))
