@@ -6,6 +6,10 @@ import './Navbar.css'
 const links = [
   { to: '/',             label: 'Главная' },
   { to: '/events',       label: 'События' },
+  { to: '/calendar',     label: 'Календарь' },
+  { to: '/instructors',  label: 'Инструкторы' },
+  { to: '/students',     label: 'Ученикам' },
+  { to: '/glossary',     label: 'Глоссарий' },
   { to: '/plans',        label: 'Планы' },
   { to: '/honor',        label: 'Доска почёта' },
   { to: '/achievements', label: 'Достижения' },
@@ -13,7 +17,7 @@ const links = [
 ]
 
 export default function Navbar() {
-  const { isAdmin } = useAuth()
+  const { isAuthenticated, isAdmin, user, signOut } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
 
   const closeMenu = () => setIsOpen(false)
@@ -52,6 +56,15 @@ export default function Navbar() {
           {isAdmin && (
             <NavLink to="/admin" onClick={closeMenu} className={({ isActive }) => 'nav-link nav-admin' + (isActive ? ' active' : '')}>
               Админ
+            </NavLink>
+          )}
+          {isAuthenticated ? (
+            <button className="nav-link nav-button" onClick={() => { signOut(); closeMenu() }}>
+              {user?.display_name || user?.login || 'Выйти'}
+            </button>
+          ) : (
+            <NavLink to="/login" onClick={closeMenu} className={({ isActive }) => 'nav-link nav-admin' + (isActive ? ' active' : '')}>
+              Вход
             </NavLink>
           )}
         </nav>

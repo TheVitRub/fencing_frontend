@@ -4,6 +4,10 @@ import Navbar from './components/common/Navbar'
 import Footer from './components/common/Footer'
 import Home from './pages/Home'
 import Events from './pages/Events'
+import Calendar from './pages/Calendar'
+import Instructors from './pages/Instructors'
+import Students from './pages/Students'
+import Glossary from './pages/Glossary'
 import Plans from './pages/Plans'
 import Honor from './pages/Honor'
 import Achievements from './pages/Achievements'
@@ -24,6 +28,10 @@ function Layout() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/instructors" element={<Instructors />} />
+          <Route path="/students" element={<Students />} />
+          <Route path="/glossary" element={<Glossary />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/honor" element={<Honor />} />
           <Route path="/achievements" element={<Achievements />} />

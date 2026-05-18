@@ -4,9 +4,12 @@ import { useAuth } from '../context/AuthContext'
 import './AdminLogin.css'
 
 export default function AdminLogin() {
-  const { signIn } = useAuth()
+  const { signIn, signUp } = useAuth()
   const navigate = useNavigate()
+  const [mode, setMode] = useState('login')
   const [login, setLogin] = useState('')
+  const [email, setEmail] = useState('')
+  const [displayName, setDisplayName] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,10 +19,15 @@ export default function AdminLogin() {
     setError('')
     setLoading(true)
     try {
-      await signIn(login, password)
-      navigate('/admin')
+      if (mode === 'register') {
+        await signUp({ login, email, display_name: displayName, password })
+        navigate('/events')
+      } else {
+        await signIn(login, password)
+        navigate('/admin')
+      }
     } catch {
-      setError('Неверный логин или пароль')
+      setError(mode === 'register' ? 'Не удалось зарегистрироваться' : 'Неверный логин или пароль')
     } finally {
       setLoading(false)
     }
@@ -29,20 +37,40 @@ export default function AdminLogin() {
     <div className="login-page">
       <div className="login-box">
         <div className="login-emblem">⚔</div>
-        <h1 className="login-title">Вход в цитадель</h1>
-        <p className="login-sub">Только для посвящённых</p>
+        <h1 className="login-title">{mode === 'register' ? 'Вступить в хронику' : 'Вход в цитадель'}</h1>
+        <p className="login-sub">{mode === 'register' ? 'Аккаунт гостя создаётся сразу, роль ученика назначат старшие' : 'Для админов, инструкторов и учеников'}</p>
         <form onSubmit={submit} className="login-form">
           <div className="form-field">
             <label>Логин</label>
             <input value={login} onChange={e => setLogin(e.target.value)} autoComplete="username" />
           </div>
+          {mode === 'register' && (
+            <>
+              <div className="form-field">
+                <label>Имя на сайте</label>
+                <input value={displayName} onChange={e => setDisplayName(e.target.value)} />
+              </div>
+              <div className="form-field">
+                <label>Email</label>
+                <input value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
+              </div>
+            </>
+          )}
           <div className="form-field">
             <label>Пароль</label>
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" />
           </div>
           {error && <p className="login-error">{error}</p>}
           <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-            {loading ? 'Входим...' : 'Войти'}
+            {loading ? 'Подождите...' : (mode === 'register' ? 'Зарегистрироваться' : 'Войти')}
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ width: '100%', marginTop: '0.75rem' }}
+            onClick={() => setMode(mode === 'register' ? 'login' : 'register')}
+          >
+            {mode === 'register' ? 'Уже есть аккаунт' : 'Создать аккаунт гостя'}
           </button>
         </form>
       </div>

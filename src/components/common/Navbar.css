@@ -51,6 +51,11 @@
   transition: color var(--transition), background var(--transition);
   text-transform: uppercase;
 }
+.nav-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
 .nav-link:hover { color: var(--color-gold); background: rgba(196,165,106,0.12); }
 .nav-link.active { color: var(--color-gold); font-weight: 600; }
 

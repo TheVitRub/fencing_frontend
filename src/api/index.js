@@ -2,6 +2,8 @@ import api from './client'
 
 export const login = (login, password) =>
   api.post('/auth/login', { login, password }).then(r => r.data)
+export const register = data => api.post('/auth/register', data).then(r => r.data)
+export const me = () => api.get('/admin/me').then(r => r.data)
 
 export const getPage = slug => api.get(`/pages/${slug}`).then(r => r.data)
 export const upsertPage = (slug, data) => api.put(`/admin/pages/${slug}`, data).then(r => r.data)
@@ -10,6 +12,38 @@ export const listEvents = () => api.get('/events').then(r => r.data)
 export const createEvent = data => api.post('/admin/events', data).then(r => r.data)
 export const updateEvent = (id, data) => api.put(`/admin/events/${id}`, data).then(r => r.data)
 export const deleteEvent = id => api.delete(`/admin/events/${id}`).then(r => r.data)
+export const attendEvent = (id, status = 'going') => api.put(`/admin/events/${id}/attendance?status=${status}`).then(r => r.data)
+export const listEventAttendees = id => api.get(`/events/${id}/attendees`).then(r => r.data)
+
+export const listComments = (target_type, target_id) =>
+  api.get('/comments', { params: { target_type, target_id } }).then(r => r.data)
+export const listAdminComments = (target_type, target_id) =>
+  api.get('/admin/comments', { params: { target_type, target_id } }).then(r => r.data)
+export const createComment = data => api.post('/admin/comments', data).then(r => r.data)
+export const updateCommentStatus = (id, status) => api.put(`/admin/comments/${id}/status`, { status }).then(r => r.data)
+
+export const listNotifications = () => api.get('/admin/notifications').then(r => r.data)
+export const markNotificationRead = id => api.put(`/admin/notifications/${id}/read`).then(r => r.data)
+
+export const listUsers = () => api.get('/admin/users').then(r => r.data)
+export const updateUserRole = (id, role) => api.put(`/admin/users/${id}/role`, { role }).then(r => r.data)
+
+export const listInstructors = () => api.get('/instructors').then(r => r.data)
+export const upsertInstructorProfile = data => api.put('/admin/instructors', data).then(r => r.data)
+
+export const listKnowledge = () =>
+  api.get(localStorage.getItem('fc_token') ? '/admin/knowledge-view' : '/knowledge').then(r => r.data)
+export const createKnowledge = data => api.post('/admin/knowledge', data).then(r => r.data)
+export const updateKnowledge = (id, data) => api.put(`/admin/knowledge/${id}`, data).then(r => r.data)
+export const deleteKnowledge = id => api.delete(`/admin/knowledge/${id}`).then(r => r.data)
+
+export const listGlossary = () => api.get('/glossary').then(r => r.data)
+export const createGlossary = data => api.post('/admin/glossary', data).then(r => r.data)
+export const updateGlossary = (id, data) => api.put(`/admin/glossary/${id}`, data).then(r => r.data)
+export const deleteGlossary = id => api.delete(`/admin/glossary/${id}`).then(r => r.data)
+
+export const listProgress = () => api.get('/admin/progress').then(r => r.data)
+export const upsertProgress = data => api.put('/admin/progress', data).then(r => r.data)
 
 export const listPlans = () => api.get('/plans').then(r => r.data)
 export const createPlan = data => api.post('/admin/plans', data).then(r => r.data)
