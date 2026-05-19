@@ -6,7 +6,7 @@ export default function PageSection({ title, subtitle, children, centered = fals
       <div className="page-wrapper">
         {title && <h2 className="section-title">{title}</h2>}
         {subtitle && <p className="section-subtitle">{subtitle}</p>}
-        <div className="ornament-divider">✦</div>
+        <div className="ornament-divider">ARCHIVUM</div>
         {children}
       </div>
     </section>

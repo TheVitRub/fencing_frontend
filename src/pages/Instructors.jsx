@@ -12,7 +12,7 @@ export default function Instructors() {
         {(instructors || []).map(profile => (
           <article className="club-profile" key={profile.id}>
             <div className="club-profile-photo">
-              {profile.photo_url ? <img src={profile.photo_url} alt={profile.name} /> : <span>⚔</span>}
+              {profile.photo_url ? <img src={profile.photo_url} alt={profile.name} /> : <span>Портрет</span>}
             </div>
             <div>
               <h3>{profile.name || 'Инструктор школы'}</h3>

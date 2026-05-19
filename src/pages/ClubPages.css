@@ -882,3 +882,165 @@
     max-width: 86px;
   }
 }
+
+/* Archive wireframe pass for club pages. */
+.calendar-shell,
+.club-panel,
+.club-profile,
+.student-article-card,
+.student-article,
+.glossary-index,
+.glossary-feature,
+.glossary-term,
+.profile-hero,
+.profile-panel,
+.profile-note,
+.profile-progress {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+.calendar-head,
+.calendar-actions,
+.calendar-weekday {
+  background: color-mix(in oklch, var(--color-border), transparent 86%);
+}
+
+.calendar-head button,
+.calendar-actions button,
+.calendar-event button,
+.calendar-event a,
+.club-inline-btn,
+.club-toolbar button,
+.student-topics button,
+.glossary-categories button,
+.profile-actions a {
+  font-family: var(--font-body);
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.calendar-day {
+  background: color-mix(in oklch, var(--color-surface), transparent 8%);
+}
+
+.calendar-day.is-past,
+.calendar-event.is-old {
+  opacity: 0.58;
+}
+
+.calendar-day.is-today {
+  background: color-mix(in oklch, var(--color-crimson), transparent 93%);
+  box-shadow: inset 0 0 0 1px var(--color-crimson);
+}
+
+.calendar-event {
+  border-left: 0;
+  box-shadow: inset 2px 0 0 var(--color-crimson);
+}
+
+.club-profile {
+  grid-template-columns: 132px 1fr;
+  align-items: start;
+}
+
+.club-profile-photo,
+.student-article-mark,
+.glossary-feature-media {
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--color-border), transparent 72%) 1px, transparent 1px) 0 0 / 24px 24px,
+    color-mix(in oklch, var(--color-surface), var(--color-border) 18%);
+}
+
+.club-profile-photo span,
+.student-article-mark span {
+  border: 0;
+  border-radius: 0;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.club-profile blockquote {
+  border-left: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-size: 1.08rem;
+  padding-left: 0.75rem;
+}
+
+.student-topic-section header {
+  max-width: none;
+}
+
+.student-article-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.student-article-card:hover,
+.glossary-term:hover {
+  box-shadow: none;
+  transform: none;
+  border-color: var(--color-gold-dim);
+}
+
+.student-article-card strong,
+.glossary-term strong,
+.profile-note strong,
+.profile-progress strong {
+  font-family: var(--font-title);
+}
+
+.glossary-layout {
+  grid-template-columns: minmax(210px, 0.28fr) minmax(0, 1fr);
+}
+
+.glossary-term.is-active {
+  box-shadow: inset 2px 0 0 var(--color-crimson);
+}
+
+.profile-grid {
+  align-items: start;
+}
+
+.profile-progress {
+  box-shadow: inset 2px 0 0 color-mix(in oklch, var(--color-crimson), transparent 30%);
+}
+
+@media (max-width: 760px) {
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-day {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 0.75rem;
+    min-height: auto;
+    padding: 0.7rem;
+  }
+
+  .calendar-day.is-muted.is-empty {
+    display: none;
+  }
+
+  .calendar-day-events {
+    margin-top: 0;
+  }
+
+  .calendar-event-top {
+    justify-content: flex-start;
+  }
+
+  .club-profile,
+  .glossary-layout,
+  .glossary-feature,
+  .profile-grid,
+  .profile-hero {
+    grid-template-columns: 1fr;
+  }
+}

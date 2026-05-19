@@ -1,7 +1,7 @@
 .footer {
-  margin-top: 6rem;
+  margin-top: 4rem;
   border-top: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: color-mix(in oklch, var(--color-surface), var(--color-bg) 36%);
   padding: 2.5rem 0 1.5rem;
 }
 
@@ -14,15 +14,15 @@
 }
 
 .footer-ornament {
-  font-size: 1.1rem;
+  font-size: 0.72rem;
   color: var(--color-gold-dim);
-  letter-spacing: 0.5rem;
+  letter-spacing: 0.22rem;
   margin-bottom: 0.5rem;
 }
 
 .footer-school {
-  font-family: var(--font-script);
-  font-size: 1.05rem;
+  font-family: var(--font-title);
+  font-size: 1rem;
   color: var(--color-gold);
 }
 

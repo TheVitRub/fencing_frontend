@@ -9,6 +9,124 @@
     radial-gradient(ellipse 90% 70% at 50% 45%, rgba(245,237,224,1) 0%, rgba(237,229,211,1) 100%);
 }
 
+/* Wireframe pass: club portal, not a marketing landing. */
+.hero {
+  min-height: auto;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--color-border), transparent 72%) 1px, transparent 1px) 0 0 / 52px 52px,
+    var(--color-bg);
+}
+.hero-content {
+  padding: clamp(2rem, 5vw, 4rem) 1.5rem;
+}
+.hero-stage {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+}
+.hero-main {
+  text-align: left;
+}
+.hero-frame {
+  display: block;
+  padding: clamp(1.25rem, 4vw, 2.2rem);
+  background: color-mix(in oklch, var(--color-surface), transparent 12%);
+  box-shadow: none;
+}
+.hero-frame::before,
+.hero-frame::after {
+  content: '';
+}
+.hero-emblem {
+  color: var(--color-crimson);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  margin-bottom: 0.9rem;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 7vw, 5.2rem);
+  line-height: 0.98;
+}
+.hero-subtitle {
+  font-family: var(--font-body);
+  letter-spacing: 0.03em;
+  text-transform: none;
+}
+.hero-rule {
+  margin-left: 0;
+}
+.hero-tagline {
+  font-style: normal;
+  letter-spacing: 0;
+  margin-left: 0;
+}
+.hero-portal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1.1rem;
+}
+.hero-portal-links a {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-gold);
+  font-size: 0.88rem;
+  padding: 0.45rem 0.7rem;
+}
+.hero-portal-links a:first-child {
+  border-color: var(--color-crimson);
+  color: var(--color-crimson);
+}
+.hero-dispatch,
+.home-news-tape,
+.home-upcoming-card,
+.home-field-card,
+.home-discipline,
+.home-quote {
+  background: var(--color-surface);
+  box-shadow: none;
+}
+.hero-dispatch::before {
+  background: none;
+}
+.hero-courtsword-note {
+  border-top: 1px solid var(--color-border);
+  display: grid;
+  gap: 0.18rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+}
+.hero-courtsword-note span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+.hero-courtsword-note strong {
+  color: var(--color-crimson);
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+}
+.hero-courtsword-note small {
+  color: var(--color-muted);
+  line-height: 1.35;
+}
+.home-broadcast {
+  margin-top: 3rem;
+}
+.home-news-item {
+  grid-template-columns: 104px 1fr;
+}
+.home-club-scale {
+  border-left: 1px solid var(--color-border);
+}
+
+@media (max-width: 880px) {
+  .hero-stage {
+    grid-template-columns: 1fr;
+  }
+}
+
 .hero::before,
 .hero::after {
   content: '';
@@ -601,5 +719,87 @@
   .home-discipline h3,
   .home-discipline p {
     padding-left: 1rem;
+  }
+}
+
+/* Final archive overrides kept at the end so the wireframe posture wins. */
+.hero {
+  min-height: auto;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--color-border), transparent 72%) 1px, transparent 1px) 0 0 / 52px 52px,
+    var(--color-bg);
+}
+.hero::before,
+.hero::after {
+  opacity: 0.36;
+  width: min(20rem, 72vw);
+}
+.hero-content {
+  padding: clamp(2rem, 5vw, 4rem) 1.5rem;
+}
+.hero-stage {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+}
+.hero-main {
+  text-align: left;
+}
+.hero-frame {
+  display: block;
+  padding: clamp(1.25rem, 4vw, 2.2rem);
+  background: color-mix(in oklch, var(--color-surface), transparent 12%);
+  box-shadow: none;
+}
+.hero-frame::before,
+.hero-frame::after {
+  content: '';
+}
+.hero-emblem {
+  color: var(--color-crimson);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  margin-bottom: 0.9rem;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 7vw, 5.2rem);
+  line-height: 0.98;
+}
+.hero-subtitle {
+  font-family: var(--font-body);
+  letter-spacing: 0.03em;
+  text-transform: none;
+}
+.hero-rule {
+  margin-left: 0;
+}
+.hero-tagline {
+  font-style: normal;
+  letter-spacing: 0;
+  margin-left: 0;
+}
+.hero-dispatch,
+.home-news-tape,
+.home-upcoming-card,
+.home-field-card,
+.home-discipline,
+.home-quote {
+  background: var(--color-surface);
+  box-shadow: none;
+}
+.hero-dispatch::before {
+  background: none;
+}
+.home-broadcast {
+  margin-top: 3rem;
+}
+.home-club-scale {
+  border-left: 1px solid var(--color-border);
+}
+@media (max-width: 880px) {
+  .hero-stage {
+    grid-template-columns: 1fr;
   }
 }

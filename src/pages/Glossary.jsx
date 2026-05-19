@@ -62,7 +62,7 @@ export default function Glossary() {
                   <img src={termImage(selected)} alt={selected.term} />
                 ) : (
                   <span className="glossary-feature-placeholder" aria-hidden="true">
-                    <strong>⚔</strong>
+                    <strong>{selected.term.slice(0, 1)}</strong>
                     <small>{selected.category || 'Термин'}</small>
                   </span>
                 )}

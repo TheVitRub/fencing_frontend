@@ -9,7 +9,7 @@ import { readAttendingEvents, rememberAttendance } from '../utils/attendanceStor
 import { formatSchoolCommentTime, formatSchoolDate, formatSchoolTime, getSchoolDateParts } from '../utils/schoolTime'
 import './Events.css'
 
-const FALLBACK_GLYPHS = ['⚔', '♜', '✦', '◇', '†']
+const FALLBACK_GLYPHS = ['I', 'II', 'III', 'IV', 'V']
 
 function parsePageContent(page) {
   try {
@@ -268,7 +268,7 @@ export default function Events() {
 
       {sortedEvents.length === 0 && !loading && (
         <div className="event-empty">
-          <p className="event-empty-glyph">⚔</p>
+          <p className="event-empty-glyph">ARCHIVUM</p>
           <p>Событий пока нет</p>
           <small>Сводка начнётся с первой публикации</small>
         </div>

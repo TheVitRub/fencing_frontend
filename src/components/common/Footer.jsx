@@ -4,8 +4,8 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="page-wrapper footer-inner">
-        <div className="footer-ornament">✦ ⚔ ✦</div>
-        <p className="footer-school">Ferrum et Gloria — Школа исторического фехтования</p>
+        <div className="footer-ornament">FERRUM ET GLORIA</div>
+        <p className="footer-school">Школа исторического фехтования в Кемерово</p>
         <div className="footer-contacts">
           <a href="https://vk.ru/historical_martial_arts_siberia" target="_blank" rel="noopener noreferrer">vk.ru/historical_martial_arts_siberia</a>
           <span className="footer-sep">·</span>

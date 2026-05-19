@@ -84,18 +84,24 @@ export default function Home() {
           <div className="hero-stage">
             <div className="hero-main">
               <div className="hero-frame">
-                <span className="hero-emblem">⚔</span>
+                <span className="hero-emblem">SCHOLA · KEMEROVO</span>
                 <h1 className="hero-title">
                   {content?.hero?.title || 'Ferrum et Gloria'}
                 </h1>
                 <div className="hero-rule" />
                 <p className="hero-subtitle">
-                  {content?.hero?.subtitle || 'XVI-XVII век · исторический бой на клинках'}
+                  {content?.hero?.subtitle || 'Историческое европейское фехтование XVI-XVII века'}
                 </p>
               </div>
               <p className="hero-tagline">
-                Железо и слава не просто слова. Это путь, который виден в тренировках, турнирах и ежедневной работе зала.
+                Небольшая школа боевого искусства: тренировки CourtSword, рапира, дага, меч, сабля, клубная хроника и материалы для учеников.
               </p>
+              <nav className="hero-portal-links" aria-label="Основные разделы клуба">
+                <Link to="/events">События</Link>
+                <Link to="/calendar">Календарь</Link>
+                <Link to="/students">Ученикам</Link>
+                <Link to="/instructors">Инструкторы</Link>
+              </nav>
             </div>
 
             <aside className="hero-dispatch" aria-label="Клубная сводка">
@@ -106,6 +112,11 @@ export default function Home() {
               <div className="hero-dispatch-signal">
                 <strong>{upcoming.length > 0 ? upcoming[0].title : 'Тренировочный режим'}</strong>
                 <small>{upcoming.length > 0 ? `Ближайшая запись: ${formatDateShort(upcoming[0].date)}` : 'Небольшая школа, живой ритм, точные объявления.'}</small>
+              </div>
+              <div className="hero-courtsword-note">
+                <span>Ближайшее занятие</span>
+                <strong>CourtSword</strong>
+                <small>{upcoming.length > 0 ? (upcoming[0].location || 'Место уточняется в событии') : 'Расписание появится после публикации события'}</small>
               </div>
               <Link to="/events" className="hero-dispatch-link">Открыть хронику <span>→</span></Link>
             </aside>
@@ -195,7 +206,7 @@ export default function Home() {
                   <div className="home-upcoming-media">
                     {cover
                       ? <img src={cover} alt={e.title} loading="lazy" />
-                      : <span className="home-upcoming-glyph">⚔</span>
+                      : <span className="home-upcoming-glyph">Court</span>
                     }
                   </div>
                   <div className="home-upcoming-body">

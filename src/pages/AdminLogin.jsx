@@ -49,7 +49,7 @@ export default function AdminLogin() {
   return (
     <div className="login-page">
       <div className="login-box">
-        <div className="login-emblem">⚔</div>
+        <div className="login-emblem">F·G</div>
         <h1 className="login-title">{mode === 'register' ? 'Создать аккаунт' : 'Вход на сайт'}</h1>
         <p className="login-sub">
           {mode === 'register'

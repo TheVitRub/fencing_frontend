@@ -91,7 +91,7 @@ export default function Students() {
                       <img src={firstImage(article)} alt={article.title} />
                     ) : (
                       <span className="student-article-mark" aria-hidden="true">
-                        <span>⚔</span>
+                        <span>Nota</span>
                       </span>
                     )}
                     <small>{article.visibility === 'student' ? 'Для учеников' : article.visibility === 'registered' ? 'После регистрации' : 'Открыто'}</small>

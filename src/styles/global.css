@@ -1,26 +1,36 @@
-/* ══ ПУБЛИЧНАЯ ТЕМА: ПЕРГАМЕНТ ══════════════════════════════════════════════ */
+/* ══ ПУБЛИЧНАЯ ТЕМА: АРХИВНАЯ БУМАГА ════════════════════════════════════════ */
 :root {
-  --color-bg:        #f5ede0;
-  --color-surface:   #ede5d3;
-  --color-border:    #c4a56a;
-  --color-gold:      #6b4812;
-  --color-gold-dim:  #9a7030;
-  --color-cream:     #2e1c0a;
-  --color-text:      #3d2a14;
-  --color-muted:     #8a7255;
-  --color-crimson:   #8b1a1a;
-  --color-crimson-hover: #a82020;
+  --bg:      oklch(98% 0.004 95);
+  --surface: oklch(100% 0.002 95);
+  --fg:      oklch(20% 0.018 70);
+  --muted:   oklch(48% 0.012 70);
+  --border:  oklch(90% 0.006 95);
+  --accent:  oklch(52% 0.10 28);
 
-  --font-title:  'Cormorant SC', serif;
-  --font-script: 'Parisienne', cursive;
-  --font-body:   'EB Garamond', serif;
+  --font-display: 'Iowan Old Style', 'Charter', Georgia, serif;
+  --font-body:    -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  --color-bg:        var(--bg);
+  --color-surface:   oklch(95% 0.012 92);
+  --color-border:    oklch(76% 0.035 83);
+  --color-gold:      oklch(42% 0.055 72);
+  --color-gold-dim:  oklch(53% 0.064 72);
+  --color-cream:     oklch(20% 0.018 70);
+  --color-text:      var(--fg);
+  --color-muted:     var(--muted);
+  --color-crimson:   var(--accent);
+  --color-crimson-hover: oklch(46% 0.12 28);
+  --color-ink:       oklch(18% 0.018 70);
+  --color-old-gold:  oklch(63% 0.07 78);
+  --color-paper-line: color-mix(in oklch, var(--color-border), transparent 58%);
+
+  --font-title:  var(--font-display);
+  --font-script: var(--font-display);
 
   --radius: 4px;
-  --transition: 0.25s ease;
-
-  /* Тени для карточек на светлом фоне */
-  --shadow-card: 0 2px 12px rgba(90,60,20,0.10);
-  --shadow-card-hover: 0 6px 24px rgba(90,60,20,0.18);
+  --transition: 0.18s ease;
+  --shadow-card: none;
+  --shadow-card-hover: none;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,11 +38,14 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: var(--color-bg);
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--color-border), transparent 82%) 1px, transparent 1px) 0 0 / 42px 42px,
+    linear-gradient(0deg, color-mix(in oklch, var(--color-border), transparent 88%) 1px, transparent 1px) 0 0 / 42px 42px,
+    var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
-  font-size: 1.08rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.65;
   min-height: 100vh;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
@@ -45,7 +58,7 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
   z-index: 9999;
 }
 
@@ -55,8 +68,9 @@ a:hover { color: var(--color-crimson); }
 h1, h2, h3, h4 {
   font-family: var(--font-title);
   color: var(--color-gold);
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
   line-height: 1.2;
+  font-weight: 500;
 }
 
 img { max-width: 100%; display: block; }
@@ -75,7 +89,7 @@ span {
 
 /* ── Layout ──────────────────────────────────────────────────────────────── */
 .page-wrapper {
-  max-width: 1100px;
+  max-width: 1180px;
   margin: 0 auto;
   padding: 0 1.5rem;
   width: 100%;
@@ -85,9 +99,9 @@ span {
 .ornament-divider {
   text-align: center;
   color: var(--color-gold-dim);
-  font-size: 1.2rem;
-  letter-spacing: 0.4rem;
-  margin: 2rem 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.28rem;
+  margin: 1.45rem 0;
   user-select: none;
 }
 .ornament-divider::before,
@@ -106,7 +120,7 @@ span {
 
 /* ── Section title ───────────────────────────────────────────────────────── */
 .section-title {
-  font-size: 2rem;
+  font-size: clamp(1.7rem, 4vw, 2.45rem);
   text-align: center;
   margin-bottom: 0.4rem;
   color: var(--color-gold);
@@ -122,18 +136,15 @@ span {
 
 /* ── Card ────────────────────────────────────────────────────────────────── */
 .card {
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 1.5rem;
   position: relative;
-  box-shadow: var(--shadow-card);
-  transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+  transition: border-color var(--transition), background var(--transition);
 }
 .card:hover {
-  box-shadow: var(--shadow-card-hover);
   border-color: var(--color-gold);
-  transform: translateY(-3px);
 }
 .card::before {
   content: '';
@@ -160,9 +171,9 @@ span {
 .btn {
   display: inline-block;
   padding: 0.55rem 1.4rem;
-  font-family: var(--font-title);
+  font-family: var(--font-body);
   font-size: 0.85rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.02em;
   border-radius: var(--radius);
   cursor: pointer;
   transition: background var(--transition), color var(--transition), border-color var(--transition);
@@ -200,7 +211,7 @@ span {
   margin-bottom: 1rem;
 }
 .form-field label {
-  font-family: var(--font-title);
+  font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.09em;
   color: var(--color-muted);
@@ -209,7 +220,7 @@ span {
 .form-field input,
 .form-field textarea,
 .form-field select {
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);

@@ -3,20 +3,22 @@
    чтобы публичный светлый стиль не «просачивался» в служебную зону.
 ────────────────────────────────────────────────────────────────────────── */
 .admin-page {
-  --color-bg:        #0e0b07;
-  --color-surface:   #1a1309;
-  --color-border:    #5a3e1b;
-  --color-gold:      #c9a84c;
-  --color-gold-dim:  #8a6b2a;
-  --color-cream:     #e8dcc4;
-  --color-text:      #cfc0a0;
-  --color-muted:     #7a6a50;
-  --color-crimson:   #8b1a1a;
-  --color-crimson-hover: #a82020;
+  --color-bg:        oklch(18% 0.018 70);
+  --color-surface:   oklch(23% 0.018 70);
+  --color-border:    oklch(42% 0.035 72);
+  --color-gold:      oklch(72% 0.07 78);
+  --color-gold-dim:  oklch(58% 0.055 78);
+  --color-cream:     oklch(91% 0.018 92);
+  --color-text:      oklch(83% 0.015 92);
+  --color-muted:     oklch(63% 0.018 83);
+  --color-crimson:   oklch(58% 0.11 28);
+  --color-crimson-hover: oklch(64% 0.12 28);
   --shadow-card:     none;
   --shadow-card-hover: none;
 
-  background: var(--color-bg);
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--color-border), transparent 84%) 1px, transparent 1px) 0 0 / 44px 44px,
+    var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
   padding: 2rem 0 4rem;
@@ -50,9 +52,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
 }
-.admin-title { font-size: 1.5rem; }
+.admin-title {
+  color: var(--color-cream);
+  font-size: 1.65rem;
+}
+
+.admin-header::before {
+  color: var(--color-muted);
+  content: 'Служебная зона клуба';
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 .admin-tabs {
   display: flex;
@@ -63,10 +79,9 @@
   padding-bottom: 1rem;
 }
 .admin-tab {
-  font-family: var(--font-title);
-  font-size: 0.8rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  letter-spacing: 0.01em;
   background: transparent;
   color: var(--color-muted);
   border: 1px solid var(--color-border);
@@ -81,7 +96,7 @@
   color: #fff;
   border-color: var(--color-crimson);
 }
-.admin-content { max-width: 800px; }
+.admin-content { max-width: 920px; }
 
 .crud-item--stacked {
   align-items: stretch;

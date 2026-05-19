@@ -11,7 +11,7 @@ const links = [
   { to: '/students', label: 'Ученикам' },
   { to: '/glossary', label: 'Глоссарий' },
   { to: '/plans', label: 'Планы' },
-  { to: '/honor', label: 'Доска почета' },
+  { to: '/honor', label: 'Почёт' },
   { to: '/achievements', label: 'Достижения' },
   { to: '/founder', label: 'Основатель' },
 ]
@@ -26,8 +26,9 @@ export default function Navbar() {
     <header className="navbar">
       <div className="navbar-inner page-wrapper">
         <NavLink to="/" className="navbar-logo" onClick={closeMenu}>
-          <span className="logo-sword">⚔</span>
+          <span className="logo-sword">F·G</span>
           <span className="logo-text">Ferrum et Gloria</span>
+          <span className="logo-place">Кемерово</span>
         </NavLink>
         <button
           className="navbar-toggle"

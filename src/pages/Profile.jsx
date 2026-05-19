@@ -14,6 +14,8 @@ const ROLE_LABELS = {
   founder: 'Основатель',
 }
 
+const DISCIPLINES = ['Рапира', 'Дага', 'Меч', 'Сабля', 'CourtSword']
+
 export default function Profile() {
   const { user, role } = useAuth()
   const progress = useFetch(listProgress)
@@ -23,6 +25,19 @@ export default function Profile() {
     () => (notifications.data || []).filter(item => !item.is_read).length,
     [notifications.data],
   )
+
+  const progressRows = useMemo(() => {
+    const source = progress.data || []
+    return DISCIPLINES.map(discipline => (
+      source.find(item => item.discipline === discipline) || {
+        id: `empty-${discipline}`,
+        discipline,
+        level: 'Не начато',
+        instructor_note: 'Инструктор ещё не оставил комментарий по этой дисциплине.',
+        passed_checks: [],
+      }
+    ))
+  }, [progress.data])
 
   const read = async id => {
     await markNotificationRead(id)
@@ -69,7 +84,7 @@ export default function Profile() {
             <span>Учебный прогресс</span>
           </header>
           <div className="profile-list">
-            {(progress.data || []).map(item => (
+            {progressRows.map(item => (
               <div className="profile-progress" key={item.id}>
                 <strong>{item.discipline}</strong>
                 <span>{item.level || 'Уровень еще не выставлен'}</span>
@@ -77,9 +92,6 @@ export default function Profile() {
                 {item.passed_checks?.length > 0 && <small>{item.passed_checks.join(', ')}</small>}
               </div>
             ))}
-            {!progress.loading && (!progress.data || progress.data.length === 0) && (
-              <p>Прогресс пока не заполнен.</p>
-            )}
           </div>
         </article>
       </div>
@@ -92,4 +104,3 @@ export default function Profile() {
     </PageSection>
   )
 }
-
